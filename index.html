@@ -207,6 +207,7 @@
     #pageDatabase th:nth-child(4) { width: 14%; }
     #pageDatabase th:nth-child(5) { width: 12%; }
     #pageDatabase th:last-child { width: 4.5rem; }
+    #pageDatabase .database-brand-column { width: 12%; }
     #pageDatabase td a { display: inline; }
     @media (max-width: 900px) {
       #pageDatabase :is(table, thead, tbody, tr) { display: block; width: 100%; }
@@ -234,7 +235,7 @@
       #pageDatabase tbody td[colspan] { display: block; height: auto; white-space: normal; }
       #pageDatabase tbody td:last-child div { justify-content: flex-start; }
       #pageDatabase tbody td button { min-width: 44px; min-height: 44px; }
-      #databasePager { position: sticky; bottom: 0; background: white; }
+      #databasePager { display: none; }
     }
 
     #pageUndian { background: transparent; }
@@ -300,6 +301,104 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
     }
+
+    @media (max-width: 639px) {
+      :is(#pageDaftar, #pagePublicDashboard, #pageDatabase, #pageSetting, #pageUndian) {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+      nav[aria-label="Navigasi utama"] a { min-height: 44px; }
+      :is(#formPendaftaran, #pageDatabase, #drawDateForm) :is(input:not([type="checkbox"]):not([type="hidden"]), select, textarea) {
+        min-width: 0;
+        max-width: 100%;
+        font-size: 16px;
+      }
+      #wrapperTicketView .flex.justify-between { gap: .5rem; }
+      #pageUndian main { gap: 1rem; }
+      #pageUndian .clean-slot-box { min-height: 11rem; padding-block: 1rem; }
+      #winnersListContainer { max-height: none; overflow: visible; }
+      #winnersListContainer .truncate { white-space: normal; overflow-wrap: anywhere; }
+      :is(div[id$="Modal"], #dashboardAuthOverlay).fixed > div {
+        max-height: calc(100dvh - 2rem);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        overflow-wrap: anywhere;
+      }
+      :is(div[id$="Modal"], #dashboardAuthOverlay).fixed :is(input:not([type="checkbox"]), select) { font-size: 16px; }
+    }
+
+    #pagePublicDashboard {
+      --summary-ink: #2f2141;
+      --summary-muted: #72566e;
+      --summary-accent: #77369f;
+      --summary-line: #ead9f0;
+      width: 100%;
+      max-width: 1380px;
+      margin-inline: auto;
+      padding: clamp(.75rem, 3vw, 2.5rem);
+      color: var(--summary-ink);
+    }
+    .fest-summary-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      background: #fffcff;
+      border: 1px solid var(--summary-line);
+      border-radius: 1.5rem;
+      box-shadow: 0 22px 60px #713b9014;
+      overflow: hidden;
+    }
+    .fest-summary-heading p, .fest-summary-panel > p {
+      margin-top: .25rem;
+      font-size: .8rem;
+      color: var(--summary-muted);
+    }
+    #pagePublicDashboard #publicDashboardFilters {
+      display: block;
+      width: 100%;
+      margin-top: .4rem;
+    }
+    .fest-summary-period-filter { max-width: 22rem; margin-bottom: 1.25rem; }
+    .fest-summary-period-label { display: block; font-size: .8rem; font-weight: 800; }
+    .fest-summary-period-label span { font-weight: 600; color: var(--summary-muted); }
+    #publicDashboardTopBrands .fest-summary-row:first-child dd { font-size: 1.2rem; }
+    #publicDashboardFilters, #refreshPublicDashboard {
+      min-height: 44px;
+      padding: .55rem .75rem;
+      border: 1px solid #e7cdeb;
+      border-radius: .75rem;
+      font-weight: 800;
+      font-size: .8rem;
+      background: #fff9fd;
+      color: var(--summary-accent);
+    }
+    #pagePublicDashboard button:disabled { opacity: .65; cursor: wait; }
+    .fest-summary-main { min-width: 0; padding: clamp(1rem, 3vw, 2.2rem); }
+    .fest-summary-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; }
+    .fest-summary-heading h1 { font-size: clamp(1.5rem, 3vw, 2.45rem); font-weight: 900; line-height: 1.1; letter-spacing: -.035em; margin-top: .35rem; }
+    #publicDashboardStatus:not(:empty) { padding: 1rem 0; color: var(--summary-muted); }
+    #publicDashboardData:not(.hidden) { display: grid; gap: 1rem; margin-top: 1.5rem; }
+    #publicDashboardTotals { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); gap: .65rem; }
+    .fest-summary-stat { background: #fcf0fa; border-top: 3px solid #cf62ac; border-radius: .75rem; padding: .875rem; }
+    .fest-summary-stat dd { font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.2; margin-top: .25rem; }
+    .fest-summary-panels { display: grid; gap: 1rem; align-items: start; }
+    .fest-summary-panel { min-width: 0; border: 1px solid var(--summary-line); border-radius: 1rem; padding: clamp(.875rem, 2vw, 1.3rem); background: white; }
+    .fest-summary-panel h2 { font-size: 1.05rem; font-weight: 900; }
+    #publicDashboardGenerations, #publicDashboardRegions, #publicDashboardBrands { margin-top: .65rem; }
+    .fest-summary-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .4rem .75rem; align-items: baseline; padding: .58rem 0; }
+    .fest-summary-stat dt, .fest-summary-row dt { overflow-wrap: anywhere; color: var(--summary-muted); }
+    .fest-summary-stat dd, .fest-summary-row dd { color: var(--summary-accent); }
+    .fest-summary-row + .fest-summary-row, #publicDashboardRegions details + details { border-top: 1px solid var(--summary-line); }
+    .fest-summary-track { grid-column: 1 / -1; height: .42rem; border-radius: 3rem; background: #f3e6f5; overflow: hidden; }
+    .fest-summary-track span { display: block; height: 100%; background: linear-gradient(90deg, #e750a0, #9461db); border-radius: inherit; }
+    #publicDashboardRegions details { padding-inline: .25rem; }
+    #publicDashboardRegions summary { min-height: 44px; }
+    @media (min-width: 640px) {
+      #publicDashboardBrands { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.4rem; }
+      #publicDashboardBrands > :nth-child(2) { border-top: 0; }
+    }
+    @media (min-width: 1080px) {
+      .fest-summary-panels { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+    }
   </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col justify-between selection:bg-rose-100 selection:text-rose-600">
@@ -317,11 +416,10 @@
   </script>
 
   <!-- ================= TOP NAVIGATION BAR (HASH ROUTING) ================= -->
-  <nav aria-label="Navigasi utama" class="w-full bg-white/95 backdrop-blur-md border-b border-rose-100 sticky top-0 z-40">
+  <nav aria-label="Navigasi utama" hidden class="w-full bg-white/95 backdrop-blur-md border-b border-rose-100 sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-2 sm:px-4 py-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
       <div class="flex items-center justify-between gap-3">
         <a href="#" class="font-extrabold text-sm text-slate-800">Suryatokoku Beauty Fest</a>
-        <button id="adminSignOut" type="button" onclick="signOutAdmin()" class="hidden px-2 py-1.5 text-xs font-bold text-rose-700" aria-label="Keluar akun admin">Keluar</button>
       </div>
       <div class="grid grid-cols-4 sm:flex gap-1">
         <a href="#" id="navLinkDaftar" class="min-h-10 flex items-center justify-center px-1 sm:px-3 rounded-xl text-center text-xs font-bold text-slate-700 hover:bg-rose-50">Pendaftaran</a>
@@ -331,6 +429,7 @@
       </div>
     </div>
   </nav>
+  <button id="adminSignOut" type="button" onclick="signOutAdmin()" class="hidden self-end mr-3 mt-1 px-2 py-1.5 text-xs font-bold text-rose-700" aria-label="Keluar akun admin">Keluar</button>
 
     <div id="dashboardAuthOverlay" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-30 flex items-center justify-center p-4">
       <div class="bg-white rounded-3xl p-7 max-w-sm w-full shadow-2xl border border-rose-100 text-center space-y-4">
@@ -817,38 +916,55 @@
     </div>
   </section>
 
-  <section id="pagePublicDashboard" class="hidden w-full max-w-6xl mx-auto px-4 py-6 sm:py-10">
-    <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
-      <div>
-        <a href="#" class="text-sm font-bold text-rose-700">← Pendaftaran</a>
-        <h1 class="mt-2 text-3xl sm:text-4xl font-black text-slate-900">Dashboard Pendaftaran Undian</h1>
+  <section id="pagePublicDashboard" class="hidden">
+    <div class="fest-summary-shell">
+      <div class="fest-summary-main">
+        <div class="fest-summary-period-filter">
+          <label for="publicDashboardFilters" class="fest-summary-period-label">Filter Tanggal <span>· Desember 2026 (WIB)</span></label>
+          <select id="publicDashboardFilters" onchange="loadPublicDashboard(this.value)">
+            <option value="semua">Semua Pendaftar</option>
+            <option value="sebelum">Sebelum 10 Desember</option>
+            <option value="hari_10">Hari Pertama · 10 Desember</option>
+            <option value="hari_11">Hari Kedua · 11 Desember</option>
+            <option value="hari_12">Hari Keempat · 12 Desember</option>
+            <option value="hari_13">Hari Terakhir · 13 Desember</option>
+          </select>
+        </div>
+        <header class="fest-summary-heading">
+          <div>
+            <p>Beauty Fest Suryatokoku</p>
+            <h1>Dashboard Pendaftaran</h1>
+          </div>
+          <button type="button" id="refreshPublicDashboard" onclick="loadPublicDashboard()">
+            <i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Muat Ulang
+          </button>
+        </header>
+        <p id="publicDashboardStatus" role="status"></p>
+        <div id="publicDashboardData" class="hidden">
+          <dl id="publicDashboardTotals" aria-label="Ringkasan peserta"></dl>
+          <div class="fest-summary-panels">
+            <section class="fest-summary-panel" aria-labelledby="fest-generation-title">
+              <h2 id="fest-generation-title">Pendaftaran per Generasi</h2>
+              <dl id="publicDashboardGenerations"></dl>
+            </section>
+            <section class="fest-summary-panel" aria-labelledby="fest-region-title">
+              <h2 id="fest-region-title">Wilayah Peserta</h2>
+              <p>Ketuk kabupaten atau kota untuk melihat kecamatan.</p>
+              <div id="publicDashboardRegions"></div>
+            </section>
+          </div>
+          <section class="fest-summary-panel" aria-labelledby="fest-top-brand-title">
+            <h2 id="fest-top-brand-title">Top 10 Brand Favorit</h2>
+            <p id="publicDashboardTopBrandsEmpty" class="hidden">Belum ada pilihan brand pada periode ini.</p>
+            <dl id="publicDashboardTopBrands"></dl>
+          </section>
+          <section class="fest-summary-panel" aria-labelledby="fest-brand-title">
+            <h2 id="fest-brand-title">Brand Favorit</h2>
+            <p>Satu peserta bisa memilih lebih dari satu brand.</p>
+            <dl id="publicDashboardBrands"></dl>
+          </section>
+        </div>
       </div>
-      <button type="button" id="refreshPublicDashboard" onclick="loadPublicDashboard()" class="min-h-11 rounded-xl border border-rose-200 bg-white px-4 text-sm font-bold text-rose-700 disabled:opacity-50">Muat Ulang</button>
-    </div>
-    <div id="publicDashboardFilters" role="group" aria-label="Tanggal pendaftaran Desember 2026, WIB" class="mb-4 flex flex-wrap gap-2">
-      <button type="button" data-period="semua" aria-pressed="true" onclick="loadPublicDashboard(this.dataset.period)" class="min-h-11 rounded-xl border border-rose-200 bg-white px-3 py-2 text-sm font-bold text-rose-800 aria-pressed:bg-rose-700 aria-pressed:text-white disabled:opacity-60">Semua Pendaftar</button>
-      <button type="button" data-period="sebelum" aria-pressed="false" onclick="loadPublicDashboard(this.dataset.period)" class="min-h-11 rounded-xl border border-rose-200 bg-white px-3 py-2 text-sm font-bold text-rose-800 aria-pressed:bg-rose-700 aria-pressed:text-white disabled:opacity-60">Sebelum 10 Desember</button>
-      <button type="button" data-period="hari_10" aria-pressed="false" onclick="loadPublicDashboard(this.dataset.period)" class="min-h-11 rounded-xl border border-rose-200 bg-white px-3 py-2 text-sm font-bold text-rose-800 aria-pressed:bg-rose-700 aria-pressed:text-white disabled:opacity-60">Hari Pertama · 10 Desember</button>
-      <button type="button" data-period="hari_11" aria-pressed="false" onclick="loadPublicDashboard(this.dataset.period)" class="min-h-11 rounded-xl border border-rose-200 bg-white px-3 py-2 text-sm font-bold text-rose-800 aria-pressed:bg-rose-700 aria-pressed:text-white disabled:opacity-60">Hari Kedua · 11 Desember</button>
-      <button type="button" data-period="hari_12" aria-pressed="false" onclick="loadPublicDashboard(this.dataset.period)" class="min-h-11 rounded-xl border border-rose-200 bg-white px-3 py-2 text-sm font-bold text-rose-800 aria-pressed:bg-rose-700 aria-pressed:text-white disabled:opacity-60">Hari Keempat · 12 Desember</button>
-      <button type="button" data-period="hari_13" aria-pressed="false" onclick="loadPublicDashboard(this.dataset.period)" class="min-h-11 rounded-xl border border-rose-200 bg-white px-3 py-2 text-sm font-bold text-rose-800 aria-pressed:bg-rose-700 aria-pressed:text-white disabled:opacity-60">Hari Terakhir · 13 Desember</button>
-    </div>
-    <p id="publicDashboardStatus" class="text-sm text-slate-600" role="status"></p>
-    <div id="publicDashboardData" class="hidden space-y-6">
-      <dl class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="publicDashboardTotals"></dl>
-      <section class="rounded-2xl border border-rose-100 bg-white p-4 sm:p-6">
-        <h2 class="text-lg font-extrabold text-slate-900 mb-3">Pendaftaran per Generasi</h2>
-        <dl id="publicDashboardGenerations" class="divide-y divide-rose-100"></dl>
-      </section>
-      <section class="rounded-2xl border border-rose-100 bg-white p-4 sm:p-6">
-        <h2 class="text-lg font-extrabold text-slate-900 mb-3">Kabupaten/Kota dan Kecamatan</h2>
-        <div id="publicDashboardRegions" class="space-y-2"></div>
-      </section>
-      <section class="rounded-2xl border border-rose-100 bg-white p-4 sm:p-6">
-        <h2 class="text-lg font-extrabold text-slate-900">Brand Favorit</h2>
-        <p class="text-sm text-slate-600 mt-1 mb-3">Satu peserta bisa memilih lebih dari satu brand.</p>
-        <dl id="publicDashboardBrands" class="grid sm:grid-cols-2 gap-x-6 divide-y divide-rose-100"></dl>
-      </section>
     </div>
   </section>
 
@@ -918,8 +1034,8 @@
           <thead role="rowgroup" class="bg-rose-50/50 text-slate-600 font-extrabold sticky top-0 z-10 border-b border-rose-100 whitespace-nowrap">
             <tr role="row">
               <th role="columnheader" class="p-3 text-center">
-                <input type="checkbox" id="checkSelectAll" aria-label="Pilih semua peserta di halaman ini" onchange="toggleSelectAll(this)" class="w-4 h-4 accent-rose-500 rounded">
-                <label for="checkSelectAll" class="hidden database-mobile-select">Pilih semua di halaman ini</label>
+                <input type="checkbox" id="checkSelectAll" aria-label="Pilih semua peserta yang tampil" onchange="toggleSelectAll(this)" class="w-4 h-4 accent-rose-500 rounded">
+                <label for="checkSelectAll" class="hidden database-mobile-select">Pilih semua peserta yang tampil</label>
               </th>
               <th role="columnheader" class="p-3 text-center">No.</th>
               <th role="columnheader" class="p-3">Tanggal Daftar</th>
@@ -932,6 +1048,7 @@
               <th role="columnheader" class="p-3">Kecamatan</th>
               <th role="columnheader" class="p-3">Desa/Kelurahan</th>
               <th role="columnheader" class="p-3">Nomor Undian</th>
+              <th role="columnheader" class="p-3 database-brand-column">Brand Favorit</th>
               <th role="columnheader" class="p-3 text-center">Aksi</th>
             </tr>
           </thead>
@@ -1453,7 +1570,7 @@
       const requiresAdmin = hash === '#database' || hash === '#undian';
       const needsLogin = requiresAdmin && !isAdminSession(adminSession);
       document.getElementById('dashboardAuthOverlay').classList.toggle('hidden', !needsLogin);
-      document.getElementById('adminSignOut').classList.toggle('hidden', !isAdminSession(adminSession));
+      document.getElementById('adminSignOut').classList.toggle('hidden', !requiresAdmin || needsLogin);
       if (needsLogin) return;
 
       if (hash === '#dashboard') {
@@ -1493,7 +1610,7 @@
       ['gen_alpha', 'Generasi Alpha / Post-Gen Z (2013–2024)']
     ];
 
-    function dashboardCount(label, count, style) {
+    function dashboardCount(label, count, style, maxCount = 0) {
       const row = document.createElement('div');
       row.className = style;
       const title = document.createElement('dt');
@@ -1503,12 +1620,21 @@
       value.className = 'shrink-0 font-extrabold tabular-nums text-rose-700';
       value.textContent = dashboardNumber.format(count ?? 0);
       row.append(title, value);
+      if (maxCount > 0) {
+        const track = document.createElement('div');
+        track.className = 'fest-summary-track';
+        track.setAttribute('aria-hidden', 'true');
+        const bar = document.createElement('span');
+        bar.style.width = `${100 * (count ?? 0) / maxCount}%`;
+        track.append(bar);
+        row.append(track);
+      }
       return row;
     }
 
     function renderPublicDashboard(data) {
-      const cards = 'rounded-2xl border border-rose-100 bg-white p-4 space-y-1';
-      const line = 'flex items-start justify-between gap-3 py-2.5';
+      const cards = 'fest-summary-stat';
+      const line = 'fest-summary-row';
       const totals = [
         ['Total Peserta', data.total],
         ['Laki-laki', data.laki_laki],
@@ -1522,8 +1648,9 @@
       const generations = [...dashboardGenerations];
       if (data.generasi.setelah_2024) generations.push(['setelah_2024', 'Lahir setelah 2024']);
       if (data.generasi.tanpa_tanggal_lahir) generations.push(['tanpa_tanggal_lahir', 'Tanggal lahir belum tercatat']);
+      const maxGeneration = Math.max(0, ...generations.map(([key]) => data.generasi[key] ?? 0));
       document.getElementById('publicDashboardGenerations').replaceChildren(
-        ...generations.map(([key, label]) => dashboardCount(label, data.generasi[key], line))
+        ...generations.map(([key, label]) => dashboardCount(label, data.generasi[key], line, maxGeneration))
       );
 
       const regions = document.getElementById('publicDashboardRegions');
@@ -1531,7 +1658,7 @@
       if (!data.wilayah.length) regions.textContent = 'Belum ada data wilayah.';
       for (const region of data.wilayah) {
         const details = document.createElement('details');
-        details.className = 'rounded-xl border border-rose-100 px-3';
+        details.className = 'min-w-0';
         const summary = document.createElement('summary');
         summary.className = 'cursor-pointer py-3 font-bold break-words';
         summary.textContent = `${region.kabupaten} · ${dashboardNumber.format(region.jumlah)} pelanggan`;
@@ -1548,8 +1675,21 @@
       }
 
       const brands = document.querySelectorAll('#formPendaftaran input[name="favoriteBrands"]');
+      const brandCounts = Array.from(brands, input => ({
+        name: input.value,
+        count: Number(data.brand[input.value] ?? 0)
+      }));
+      const topBrands = brandCounts
+        .filter(brand => brand.count > 0)
+        .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, 'id-ID'))
+        .slice(0, 10);
+      const maxBrand = topBrands[0]?.count ?? 0;
+      document.getElementById('publicDashboardTopBrandsEmpty').classList.toggle('hidden', topBrands.length > 0);
+      document.getElementById('publicDashboardTopBrands').replaceChildren(
+        ...topBrands.map(({ name, count }, index) => dashboardCount(`${index + 1}. ${name}`, count, line, maxBrand))
+      );
       document.getElementById('publicDashboardBrands').replaceChildren(
-        ...Array.from(brands, input => dashboardCount(input.value, data.brand[input.value], line))
+        ...brandCounts.map(({ name, count }) => dashboardCount(name, count, line, maxBrand))
       );
     }
 
@@ -1560,13 +1700,11 @@
       if (button.disabled) return;
       const status = document.getElementById('publicDashboardStatus');
       const content = document.getElementById('publicDashboardData');
-      const filters = document.querySelectorAll('#publicDashboardFilters button');
+      const filter = document.getElementById('publicDashboardFilters');
       publicDashboardPeriod = period;
       button.disabled = true;
-      for (const filter of filters) {
-        filter.disabled = true;
-        filter.setAttribute('aria-pressed', String(filter.dataset.period === period));
-      }
+      filter.value = period;
+      filter.disabled = true;
       content.classList.add('hidden');
       status.textContent = 'Memuat rekap pendaftaran…';
       try {
@@ -1580,7 +1718,7 @@
         status.textContent = 'Rekap belum bisa dimuat. Coba muat ulang.';
       } finally {
         button.disabled = false;
-        for (const filter of filters) filter.disabled = false;
+        filter.disabled = false;
       }
     }
 
@@ -1985,9 +2123,19 @@
     async function loadDashboardData() {
       showLoading(true, "Memuat data dashboard dari Supabase...");
       try {
-        const { data, error } = await supabaseClient.from('peserta_event').select('*').order('id', { ascending: false });
-        if (error) throw error;
-        allParticipants = data || [];
+        const participants = [];
+        let beforeId = null;
+        while (true) {
+          let query = supabaseClient.from('peserta_event').select('*').order('id', { ascending: false }).limit(500);
+          if (beforeId !== null) query = query.lt('id', beforeId);
+          const { data, error } = await query;
+          if (error) throw error;
+          if (!data.length) break;
+          participants.push(...data);
+          beforeId = data[data.length - 1].id;
+        }
+        if (!isAdminSession(adminSession)) return;
+        allParticipants = participants;
         filterDashboardData();
       } catch (err) {
         showNotification("Gagal Memuat Database", escapeHtml(err.message), "error");
@@ -2010,14 +2158,17 @@
     }
 
     let databasePage = 1;
+    const databaseMobileLayout = window.matchMedia("(max-width: 900px)");
 
     function changeDatabasePage(direction) {
       databasePage += direction;
       filterDashboardData();
-      if (window.matchMedia("(max-width: 900px)").matches) window.scrollTo(0, 0);
     }
 
     window.addEventListener('resize', () => {
+      if (!databaseMobileLayout.matches && window.location.hash === '#database' && isAdminSession(adminSession)) filterDashboardData();
+    });
+    databaseMobileLayout.addEventListener('change', () => {
       if (window.location.hash === '#database' && isAdminSession(adminSession)) filterDashboardData();
     });
 
@@ -2030,8 +2181,8 @@
       const head = document.querySelector('#databaseTable thead');
       const pager = document.getElementById('databasePager');
       const availableHeight = document.documentElement.clientHeight - head.getBoundingClientRect().bottom - pager.offsetHeight - 2;
-      const pageSize = window.matchMedia("(max-width: 900px)").matches
-        ? 1
+      const pageSize = databaseMobileLayout.matches
+        ? Math.max(1, dataList.length)
         : Math.max(1, Math.floor(availableHeight / 46));
       const pageCount = Math.max(1, Math.ceil(dataList.length / pageSize));
       databasePage = Math.min(pageCount, Math.max(1, databasePage));
@@ -2045,13 +2196,14 @@
       master.disabled = pageRows.length === 0;
 
       if (dataList.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="13" class="p-8 text-center text-slate-400 font-medium">Tidak ada data peserta.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="14" class="p-8 text-center text-slate-400 font-medium">Tidak ada data peserta.</td></tr>`;
         updateSelectedCount();
         return;
       }
 
       const labels = Array.from(head.rows[0].cells, cell => cell.textContent.trim());
       labels[0] = 'Pilih peserta';
+      const rows = document.createDocumentFragment();
       pageRows.forEach((row, index) => {
         const isChecked = selectedParticipantIds.has(row.id);
         const waClean = (row.whatsapp || '').replace(/[^0-9]/g, '');
@@ -2079,6 +2231,7 @@
           <td class="p-3 whitespace-nowrap text-slate-600">${escapeHtml(row.kecamatan || '-')}</td>
           <td class="p-3 whitespace-nowrap text-slate-600">${escapeHtml(row.desa || '-')}</td>
           <td class="p-3 whitespace-nowrap font-mono font-black text-rose-600">${escapeHtml(row.kode_undian || '-')}</td>
+          <td class="p-3 whitespace-nowrap text-slate-600">${escapeHtml(row.brand_favorit?.length ? row.brand_favorit.join(', ') : '-')}</td>
           <td class="p-3 text-center whitespace-nowrap">
             <div class="flex items-center justify-center gap-2">
               <button onclick="openEditModal(${row.id})" class="text-amber-500 hover:text-amber-600 p-1" title="Edit Peserta">
@@ -2100,8 +2253,9 @@
           value.append(...cell.childNodes);
           cell.append(value);
         }
-        tbody.appendChild(tr);
+        rows.appendChild(tr);
       });
+      tbody.appendChild(rows);
       updateSelectedCount();
     }
 
