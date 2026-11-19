@@ -115,11 +115,11 @@
       color: var(--ink);
     }
 
-    #pageDaftar, #pageSetting, #pageDashboard { padding-block: clamp(1.25rem, 4vw, 3.5rem); }
+    #pageDaftar, #pageSetting { padding-block: clamp(1.25rem, 4vw, 3.5rem); }
     #pageDaftar { max-width: 30rem; }
     #wrapperFormDaftar { border-radius: 1.75rem; }
     #wrapperFormDaftar, #wrapperTicketView, #drawDateForm,
-    #pageDashboard > .bg-white, .clean-draw-card {
+    .clean-draw-card {
       border: 1px solid var(--line);
       box-shadow: var(--lift);
     }
@@ -174,7 +174,7 @@
     #formPendaftaran input::placeholder { color: #776273; }
     #formPendaftaran :is(.text-slate-400,.text-slate-500),
     #pageDaftar #wrapperTicketView .text-slate-400,
-    #pageUndian .text-slate-400, #pageDashboard .text-slate-400 { color: #72566e; }
+    #pageUndian .text-slate-400, #pageDatabase .text-slate-400 { color: #72566e; }
     #formPendaftaran fieldset { min-width: 0; }
     #formPendaftaran label:has(input[name=favoriteBrands]) { background: var(--paper); border-color: var(--line); min-height: 44px; overflow-wrap: anywhere; }
     #formPendaftaran label:has(input[name=favoriteBrands]:checked) { background: #f9ddeb; border-color: #b84e80; }
@@ -186,10 +186,35 @@
     }
     #btnDaftar:disabled { background: #f0e7ee; color: #715e70; }
     #drawDateForm h2 { font-size: 1.75rem; }
-    #drawDateForm button, #pageDashboard :is(button,label.btn-active) { min-height: 44px; }
-    #pageDashboard thead { background: #f9e8f2; }
-    #dashboardTableBody tr:nth-child(even) { background: #fff8fc; }
-    #pageDashboard table { min-width: 100%; }
+    #drawDateForm button, #pageDatabase :is(button,label.btn-active) { min-height: 44px; }
+    #pageDatabase thead { background: #f9e8f2; }
+    #databaseTableBody tr:nth-child(even) { background: #fff8fc; }
+    body:has(#pageDatabase:not(.hidden)) > footer { display: none; }
+    #pageDatabase:not(.hidden) { display: flex; flex-direction: column; min-height: 100dvh; }
+    #pageDatabase table { table-layout: fixed; }
+    #pageDatabase :is(th, td) {
+      padding: .35rem .4rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    #pageDatabase tbody tr { height: 46px; }
+    #pageDatabase td button { min-height: 32px; }
+    #pageDatabase td[colspan] { height: 46px; }
+    #pageDatabase th:nth-child(1) { width: 2rem; }
+    #pageDatabase th:nth-child(2) { width: 2.5rem; }
+    #pageDatabase th:nth-child(4) { width: 14%; }
+    #pageDatabase th:nth-child(5) { width: 12%; }
+    #pageDatabase th:last-child { width: 4.5rem; }
+    #pageDatabase td a { display: inline; }
+    @media (max-width: 900px) {
+      #pageDatabase :is(th, td:not([colspan])):is(:nth-child(2), :nth-child(3), :nth-child(n+6):nth-child(-n+11)) { display: none; }
+      #pageDatabase th:nth-child(4) { width: 34%; }
+      #pageDatabase th:nth-child(5) { width: 24%; }
+      #pageDatabase th:last-child { width: 4rem; }
+      #pageDatabase :is(th, td) { padding-inline: .25rem; }
+      #pageDatabase td a i { display: none; }
+    }
 
     #pageUndian { background: transparent; }
     #pageUndian main > div { min-width: 0; }
@@ -291,8 +316,8 @@
         <a href="#setting" id="navLinkSetting" aria-label="Setting" class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:text-rose-500">
           <i class="fa-solid fa-gear mr-1"></i> <span class="hidden sm:inline">Setting</span>
         </a>
-        <a href="#dashboard" id="navLinkDashboard" aria-label="Dashboard" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:text-rose-500">
-          <i class="fa-solid fa-chart-line mr-1"></i> <span class="hidden sm:inline">Dashboard</span>
+        <a href="#database" id="navLinkDatabase" aria-label="Database" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:text-rose-500">
+          <i class="fa-solid fa-chart-line mr-1"></i> <span class="hidden sm:inline">Database</span>
         </a>
         <button id="adminSignOut" type="button" onclick="signOutAdmin()" class="hidden px-2 py-1.5 text-xs font-bold text-slate-600" aria-label="Keluar akun admin">Keluar</button>
         <a href="#undian" id="navLinkUndian" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-gradient-to-r from-rose-500 to-purple-600 text-white shadow-sm hover:opacity-90">
@@ -351,6 +376,9 @@
       <div class="p-6 text-center">
         <h3 id="modalTitle" class="text-base font-extrabold text-slate-800 mb-1.5">Pemberitahuan</h3>
         <p id="modalMessage" class="text-xs text-slate-500 leading-relaxed mb-6 font-medium">Pesan notifikasi.</p>
+        <a id="modalContactAdmin" target="_blank" rel="noopener noreferrer" class="hidden btn-active mb-2 w-full h-11 items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl text-xs">
+          <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Hubungi Admin
+        </a>
         <button id="modalBtnClose" onclick="closeCustomModal()" class="btn-active w-full h-11 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-2xl text-xs transition shadow-button">
           Tutup
         </button>
@@ -715,7 +743,7 @@
           <span id="ticketWilayah" class="font-extrabold text-slate-800 text-right">--</span>
         </div>
         <div class="flex justify-between border-b border-rose-100 pb-2 items-center">
-          <span class="text-rose-500 font-bold">Nomor Undian Utama</span>
+          <span class="text-rose-500 font-bold">Kupon Undian</span>
           <span id="ticketKode" class="font-black text-lg text-rose-600 bg-white px-2.5 py-0.5 rounded-lg border border-rose-200">--</span>
         </div>
       </div>
@@ -774,14 +802,14 @@
   </section>
 
   <!-- ======================================================= -->
-  <!-- 3. HALAMAN DASHBOARD ADMIN (#dashboard)                 -->
+  <!-- 3. HALAMAN DASHBOARD ADMIN (#database)                 -->
   <!-- ======================================================= -->
-  <section id="pageDashboard" class="hidden slide-up max-w-7xl mx-auto w-full px-4 py-6 flex-grow relative">
+  <section id="pageDatabase" class="hidden w-full min-w-0 flex-grow bg-white relative">
     
-    <div class="bg-white rounded-3xl p-5 shadow-sm border border-rose-100/60 mb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="px-3 py-2 sm:px-5 border-b border-rose-100 flex flex-col md:flex-row md:items-center justify-between gap-2">
       <div>
         <h2 class="text-xl font-extrabold text-slate-800 flex items-center gap-2">
-          <i class="fa-solid fa-chart-line text-rose-500"></i> Dashboard Peserta Undian
+          <i class="fa-solid fa-chart-line text-rose-500"></i> Database Peserta Undian
         </h2>
         <p class="text-xs text-slate-400 font-semibold mt-0.5">Total Peserta Terdata: <span id="dashboardTotalCount" class="font-bold text-rose-500">0</span></p>
       </div>
@@ -803,23 +831,22 @@
       </div>
     </div>
 
-    <div class="bg-white rounded-2xl p-4 shadow-sm border border-rose-100/60 mb-5 flex flex-col sm:flex-row gap-3">
+    <div class="px-3 py-2 sm:px-5 flex gap-2">
       <div class="relative flex-grow">
         <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
           <i class="fa-solid fa-magnifying-glass"></i>
         </span>
-        <input type="text" id="dashboardSearch" aria-label="Cari peserta" oninput="filterDashboardData()" placeholder="Cari nama, WhatsApp, nomor undian..."
+        <input type="text" id="dashboardSearch" aria-label="Cari peserta" oninput="databasePage = 1; filterDashboardData()" placeholder="Cari nama, WhatsApp, nomor undian..."
           class="w-full h-10 pl-9 pr-3 text-xs rounded-xl border border-rose-100 bg-rose-50/20 focus:outline-none focus:ring-2 focus:ring-rose-200">
       </div>
     </div>
 
-    <div class="bg-white rounded-3xl shadow-sm border border-rose-100/60 overflow-hidden">
-      <div class="overflow-x-auto max-h-[550px]">
-        <table class="w-full text-left text-xs">
+    <div class="flex-1 min-w-0">
+        <table id="databaseTable" class="w-full text-left text-xs">
           <thead class="bg-rose-50/50 text-slate-600 font-extrabold sticky top-0 z-10 border-b border-rose-100 whitespace-nowrap">
             <tr>
               <th class="p-3 text-center">
-                <input type="checkbox" id="checkSelectAll" aria-label="Pilih semua peserta" onchange="toggleSelectAll(this)" class="w-4 h-4 accent-rose-500 rounded">
+                <input type="checkbox" id="checkSelectAll" aria-label="Pilih semua peserta di halaman ini" onchange="toggleSelectAll(this)" class="w-4 h-4 accent-rose-500 rounded">
               </th>
               <th class="p-3 text-center">No.</th>
               <th class="p-3">Tanggal Daftar</th>
@@ -837,7 +864,12 @@
           </thead>
           <tbody id="dashboardTableBody" class="divide-y divide-rose-50"></tbody>
         </table>
-      </div>
+    </div>
+
+    <div id="databasePager" class="px-3 sm:px-5 border-t border-rose-100 flex items-center justify-between gap-2 text-xs">
+      <button id="databasePrevious" type="button" onclick="changeDatabasePage(-1)" class="font-bold px-2 disabled:opacity-40">Sebelumnya</button>
+      <span id="databasePageLabel" class="text-center" aria-live="polite"></span>
+      <button id="databaseNext" type="button" onclick="changeDatabasePage(1)" class="font-bold px-2 disabled:opacity-40">Berikutnya</button>
     </div>
 
     <!-- Modal Edit Peserta -->
@@ -1336,16 +1368,20 @@
     }
 
     function handleHashNavigation() {
-      const hash = window.location.hash || '';
+      let hash = window.location.hash;
+      if (hash === '#dashboard') {
+        hash = '#database';
+        window.history.replaceState(null, '', hash);
+      }
       hideAllPages();
 
-      const navLinks = ['Daftar', 'Setting', 'Dashboard', 'Undian'];
+      const navLinks = ['Daftar', 'Setting', 'Database', 'Undian'];
       navLinks.forEach(item => {
         const el = document.getElementById(`navLink${item}`);
         if (el && item !== 'Undian') el.classList.remove('text-rose-500', 'bg-rose-50');
       });
 
-      const requiresAdmin = hash === '#dashboard' || hash === '#undian';
+      const requiresAdmin = hash === '#database' || hash === '#undian';
       const needsLogin = requiresAdmin && !isAdminSession(adminSession);
       document.getElementById('dashboardAuthOverlay').classList.toggle('hidden', !needsLogin);
       document.getElementById('adminSignOut').classList.toggle('hidden', !isAdminSession(adminSession));
@@ -1355,10 +1391,10 @@
         document.getElementById('pageSetting').classList.remove('hidden');
         document.getElementById('navLinkSetting').classList.add('text-rose-500', 'bg-rose-50');
         renderDrawDates();
-      } else if (hash === '#dashboard') {
-        const pDashboard = document.getElementById('pageDashboard');
+      } else if (hash === '#database') {
+        const pDashboard = document.getElementById('pageDatabase');
         if (pDashboard) pDashboard.classList.remove('hidden');
-        const navDashboard = document.getElementById('navLinkDashboard');
+        const navDashboard = document.getElementById('navLinkDatabase');
         if (navDashboard) navDashboard.classList.add('text-rose-500', 'bg-rose-50');
         loadDashboardData();
       } else if (hash === '#undian') {
@@ -1374,7 +1410,7 @@
     }
 
     function hideAllPages() {
-      ['pageDaftar', 'pageSetting', 'pageDashboard', 'pageUndian'].forEach(id => {
+      ['pageDaftar', 'pageSetting', 'pageDatabase', 'pageUndian'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.add('hidden');
       });
@@ -1387,10 +1423,18 @@
       if (overlay) overlay.classList.toggle('hidden', !show);
     }
 
-    function showNotification(title, message, type = 'info') {
+    function showNotification(title, message, type = 'info', contactAdmin = false) {
       const modal = document.getElementById('customModal');
       const titleEl = document.getElementById('modalTitle');
       const msgEl = document.getElementById('modalMessage');
+      const contactLink = document.getElementById('modalContactAdmin');
+      contactLink.classList.toggle('hidden', !contactAdmin);
+      contactLink.classList.toggle('flex', contactAdmin);
+      if (contactAdmin) contactLink.href = `https://wa.me/${CONFIG.WHATSAPP_ADMIN}`;
+      const closeButton = document.getElementById('modalBtnClose');
+      closeButton.textContent = 'Tutup';
+      closeButton.className = 'btn-active w-full h-11 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-2xl text-xs transition shadow-button';
+      closeButton.onclick = closeCustomModal;
       if (titleEl) titleEl.innerText = title;
       if (msgEl) msgEl.innerHTML = message;
       const header = document.getElementById('modalIconHeader');
@@ -1594,7 +1638,7 @@
       } catch (err) {
         showLoading(false);
         if (err.code === '23505') {
-          showNotification("Nomor WhatsApp Sudah Terdaftar", "Gunakan tautan tiket yang sudah disimpan, atau hubungi admin jika tautannya hilang.", "info");
+          showNotification("Nomor WhatsApp Sudah Terdaftar", "Gunakan tautan tiket yang sudah disimpan, atau hubungi admin jika tautannya hilang.", "info", true);
         } else {
           console.error("Gagal mendaftarkan kupon:", err);
           showNotification("Gagal Pendaftaran", "Pendaftaran belum berhasil. Periksa data yang diisi atau hubungi admin jika masalah berlanjut.", "error");
@@ -1610,6 +1654,10 @@
       const modalTitle = document.getElementById('modalTitle');
       const modalMsg = document.getElementById('modalMessage');
       const modalBtn = document.getElementById('modalBtnClose');
+
+      const contactLink = document.getElementById('modalContactAdmin');
+      contactLink.classList.add('hidden');
+      contactLink.classList.remove('flex');
 
       if (modalTitle) modalTitle.innerText = "Mengirim Bukti Pendaftaran";
       if (modalHeader) modalHeader.className = "h-20 flex items-center justify-center text-white relative bg-emerald-500 shadow-inner";
@@ -1774,7 +1822,7 @@
         allParticipants = data || [];
         filterDashboardData();
       } catch (err) {
-        showNotification("Gagal Dashboard", escapeHtml(err.message), "error");
+        showNotification("Gagal Memuat Database", escapeHtml(err.message), "error");
       } finally {
         showLoading(false);
       }
@@ -1793,19 +1841,45 @@
       return `${day}/${month}/${year} ${hours}:${mins}`;
     }
 
+    let databasePage = 1;
+
+    function changeDatabasePage(direction) {
+      databasePage += direction;
+      filterDashboardData();
+    }
+
+    window.addEventListener('resize', () => {
+      if (window.location.hash === '#database' && isAdminSession(adminSession)) filterDashboardData();
+    });
+
     function renderDashboardTable(dataList) {
       const tbody = document.getElementById('dashboardTableBody');
       if (!tbody) return;
       tbody.innerHTML = '';
       const totalCount = document.getElementById('dashboardTotalCount');
       if (totalCount) totalCount.innerText = dataList.length;
+      const head = document.querySelector('#databaseTable thead');
+      const pager = document.getElementById('databasePager');
+      const availableHeight = document.documentElement.clientHeight - head.getBoundingClientRect().bottom - pager.offsetHeight - 2;
+      const pageSize = Math.max(1, Math.floor(availableHeight / 46));
+      const pageCount = Math.max(1, Math.ceil(dataList.length / pageSize));
+      databasePage = Math.min(pageCount, Math.max(1, databasePage));
+      const offset = (databasePage - 1) * pageSize;
+      document.getElementById('databasePrevious').disabled = databasePage === 1;
+      document.getElementById('databaseNext').disabled = databasePage === pageCount;
+      document.getElementById('databasePageLabel').textContent = `Halaman ${databasePage} dari ${pageCount}`;
+      const pageRows = dataList.slice(offset, offset + pageSize);
+      const master = document.getElementById('checkSelectAll');
+      master.checked = pageRows.length > 0 && pageRows.every(row => selectedParticipantIds.has(row.id));
+      master.disabled = pageRows.length === 0;
 
       if (dataList.length === 0) {
         tbody.innerHTML = `<tr><td colspan="13" class="p-8 text-center text-slate-400 font-medium">Tidak ada data peserta.</td></tr>`;
+        updateSelectedCount();
         return;
       }
 
-      dataList.forEach((row, index) => {
+      pageRows.forEach((row, index) => {
         const isChecked = selectedParticipantIds.has(row.id);
         const waClean = (row.whatsapp || '').replace(/[^0-9]/g, '');
         const waLink = waClean.startsWith('0') ? '62' + waClean.slice(1) : waClean;
@@ -1816,7 +1890,7 @@
           <td class="p-3 text-center">
             <input type="checkbox" value="${row.id}" ${isChecked ? 'checked' : ''} onchange="toggleSelectRow(${row.id}, this)" class="w-4 h-4 accent-rose-500 rounded">
           </td>
-          <td class="p-3 text-center font-bold text-slate-400">${index + 1}</td>
+          <td class="p-3 text-center font-bold text-slate-400">${offset + index + 1}</td>
           <td class="p-3 whitespace-nowrap text-slate-500">${escapeHtml(formatDate(row.created_at, true))}</td>
           <td class="p-3 whitespace-nowrap font-bold text-slate-800 uppercase">${escapeHtml(row.nama || '-')}</td>
           <td class="p-3 whitespace-nowrap">
@@ -1842,6 +1916,11 @@
             </div>
           </td>
         `;
+        for (const cell of tr.cells) {
+          if (cell.classList.contains('whitespace-nowrap') && !cell.querySelector('button')) {
+            cell.title = cell.textContent.trim();
+          }
+        }
         tbody.appendChild(tr);
       });
       updateSelectedCount();
@@ -1863,7 +1942,7 @@
     }
 
     function toggleSelectAll(masterCb) {
-      const checkboxes = document.querySelectorAll('#dashboardTableBody input[type="checkbox"]');
+      const checkboxes = document.querySelectorAll('#databaseTableBody input[type="checkbox"]');
       checkboxes.forEach(cb => {
         cb.checked = masterCb.checked;
         const id = parseInt(cb.value, 10);
