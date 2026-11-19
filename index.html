@@ -190,7 +190,8 @@
     #pageDatabase thead { background: #f9e8f2; }
     #databaseTableBody tr:nth-child(even) { background: #fff8fc; }
     body:has(#pageDatabase:not(.hidden)) > footer { display: none; }
-    #pageDatabase:not(.hidden) { display: flex; flex-direction: column; min-height: 100dvh; }
+    #pageDatabase:not(.hidden) { display: flex; flex-direction: column; min-height: 0; }
+    nav a[aria-current="page"] { background: #f9ddeb; color: #9f315e; }
     #pageDatabase table { table-layout: fixed; }
     #pageDatabase :is(th, td) {
       padding: .35rem .4rem;
@@ -208,12 +209,32 @@
     #pageDatabase th:last-child { width: 4.5rem; }
     #pageDatabase td a { display: inline; }
     @media (max-width: 900px) {
-      #pageDatabase :is(th, td:not([colspan])):is(:nth-child(2), :nth-child(3), :nth-child(n+6):nth-child(-n+11)) { display: none; }
-      #pageDatabase th:nth-child(4) { width: 34%; }
-      #pageDatabase th:nth-child(5) { width: 24%; }
-      #pageDatabase th:last-child { width: 4rem; }
-      #pageDatabase :is(th, td) { padding-inline: .25rem; }
-      #pageDatabase td a i { display: none; }
+      #pageDatabase :is(table, thead, tbody, tr) { display: block; width: 100%; }
+      #pageDatabase thead th:not(:first-child) { display: none; }
+      #pageDatabase thead th:first-child { width: auto; text-align: left; padding-inline: .75rem; }
+      #pageDatabase .database-mobile-select { display: inline; margin-left: .375rem; }
+      #pageDatabase tbody tr { height: auto; padding: .375rem .75rem; }
+      #pageDatabase tbody td[data-label] {
+        display: grid;
+        grid-template-columns: minmax(0, 6.75rem) minmax(0, 1fr);
+        align-items: center;
+        gap: .5rem;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        white-space: normal;
+        overflow: visible;
+        overflow-wrap: anywhere;
+        text-overflow: clip;
+      }
+      #pageDatabase tbody td[data-label]::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: #72566e;
+      }
+      #pageDatabase tbody td[colspan] { display: block; height: auto; white-space: normal; }
+      #pageDatabase tbody td:last-child div { justify-content: flex-start; }
+      #pageDatabase tbody td button { min-width: 44px; min-height: 44px; }
+      #databasePager { position: sticky; bottom: 0; background: white; }
     }
 
     #pageUndian { background: transparent; }
@@ -296,33 +317,17 @@
   </script>
 
   <!-- ================= TOP NAVIGATION BAR (HASH ROUTING) ================= -->
-  <nav class="hidden w-full bg-white/80 backdrop-blur-md border-b border-rose-100/60 sticky top-0 z-40 transition-all">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-2">
-        <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-400 flex items-center justify-center text-white shadow-sm font-bold text-base">
-          S
-        </div>
-        <div>
-          <h1 class="font-extrabold text-sm text-slate-800 leading-tight tracking-tight">Suryatokoku</h1>
-          <p class="text-[10px] text-rose-500 font-bold uppercase tracking-wider">Beautyfest 2026</p>
-        </div>
-      </a>
-
-      <!-- Menu Hash Links -->
-      <div class="flex items-center gap-1.5 sm:gap-2">
-        <a href="#" id="navLinkDaftar" aria-label="Pendaftaran" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:text-rose-500">
-          <i class="fa-solid fa-id-card mr-1"></i> <span class="hidden sm:inline">Pendaftaran</span>
-        </a>
-        <a href="#setting" id="navLinkSetting" aria-label="Setting" class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:text-rose-500">
-          <i class="fa-solid fa-gear mr-1"></i> <span class="hidden sm:inline">Setting</span>
-        </a>
-        <a href="#database" id="navLinkDatabase" aria-label="Database" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 hover:text-rose-500">
-          <i class="fa-solid fa-chart-line mr-1"></i> <span class="hidden sm:inline">Database</span>
-        </a>
-        <button id="adminSignOut" type="button" onclick="signOutAdmin()" class="hidden px-2 py-1.5 text-xs font-bold text-slate-600" aria-label="Keluar akun admin">Keluar</button>
-        <a href="#undian" id="navLinkUndian" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-gradient-to-r from-rose-500 to-purple-600 text-white shadow-sm hover:opacity-90">
-          <i class="fa-solid fa-gift mr-1 animate-bounce"></i> <span>Lucky Draw</span>
-        </a>
+  <nav aria-label="Navigasi utama" class="w-full bg-white/95 backdrop-blur-md border-b border-rose-100 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-2 sm:px-4 py-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <div class="flex items-center justify-between gap-3">
+        <a href="#" class="font-extrabold text-sm text-slate-800">Suryatokoku Beauty Fest</a>
+        <button id="adminSignOut" type="button" onclick="signOutAdmin()" class="hidden px-2 py-1.5 text-xs font-bold text-rose-700" aria-label="Keluar akun admin">Keluar</button>
+      </div>
+      <div class="grid grid-cols-4 sm:flex gap-1">
+        <a href="#" id="navLinkDaftar" class="min-h-10 flex items-center justify-center px-1 sm:px-3 rounded-xl text-center text-xs font-bold text-slate-700 hover:bg-rose-50">Pendaftaran</a>
+        <a href="#database" id="navLinkDatabase" class="min-h-10 flex items-center justify-center px-1 sm:px-3 rounded-xl text-center text-xs font-bold text-slate-700 hover:bg-rose-50">Database</a>
+        <a href="#dashboard" id="navLinkDashboard" class="min-h-10 flex items-center justify-center px-1 sm:px-3 rounded-xl text-center text-xs font-bold text-slate-700 hover:bg-rose-50">Dashboard</a>
+        <a href="#undian" id="navLinkUndian" class="min-h-10 flex items-center justify-center px-1 sm:px-3 rounded-xl text-center text-xs font-bold text-slate-700 hover:bg-rose-50">Undian</a>
       </div>
     </div>
   </nav>
@@ -524,12 +529,20 @@
               <span>CBD</span>
             </label>
             <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
+              <input type="checkbox" name="favoriteBrands" value="Citra" class="accent-rose-500">
+              <span>Citra</span>
+            </label>
+            <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
               <input type="checkbox" name="favoriteBrands" value="Dazzle Me" class="accent-rose-500">
               <span>Dazzle Me</span>
             </label>
             <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
               <input type="checkbox" name="favoriteBrands" value="Doremi" class="accent-rose-500">
               <span>Doremi</span>
+            </label>
+            <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
+              <input type="checkbox" name="favoriteBrands" value="Dove" class="accent-rose-500">
+              <span>Dove</span>
             </label>
             <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
               <input type="checkbox" name="favoriteBrands" value="Emina" class="accent-rose-500">
@@ -544,8 +557,16 @@
               <span>Glad2glow</span>
             </label>
             <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
+              <input type="checkbox" name="favoriteBrands" value="Glow &amp; Lovely" class="accent-rose-500">
+              <span>Glow &amp; Lovely</span>
+            </label>
+            <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
               <input type="checkbox" name="favoriteBrands" value="Hanasui" class="accent-rose-500">
               <span>Hanasui</span>
+            </label>
+            <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
+              <input type="checkbox" name="favoriteBrands" value="Herborist" class="accent-rose-500">
+              <span>Herborist</span>
             </label>
             <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
               <input type="checkbox" name="favoriteBrands" value="Implora" class="accent-rose-500">
@@ -568,12 +589,24 @@
               <span>Lavojoy</span>
             </label>
             <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
+              <input type="checkbox" name="favoriteBrands" value="Lifebuoy" class="accent-rose-500">
+              <span>Lifebuoy</span>
+            </label>
+            <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
               <input type="checkbox" name="favoriteBrands" value="Make Over" class="accent-rose-500">
               <span>Make Over</span>
             </label>
             <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
               <input type="checkbox" name="favoriteBrands" value="OMG" class="accent-rose-500">
               <span>OMG</span>
+            </label>
+            <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
+              <input type="checkbox" name="favoriteBrands" value="Pond&#x27;s" class="accent-rose-500">
+              <span>Pond&#x27;s</span>
+            </label>
+            <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
+              <input type="checkbox" name="favoriteBrands" value="Romano" class="accent-rose-500">
+              <span>Romano</span>
             </label>
             <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
               <input type="checkbox" name="favoriteBrands" value="Safi" class="accent-rose-500">
@@ -584,8 +617,12 @@
               <span>Scora</span>
             </label>
             <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
-              <input type="checkbox" name="favoriteBrands" value="Unilever" class="accent-rose-500">
-              <span>Unilever</span>
+              <input type="checkbox" name="favoriteBrands" value="Sunsilk" class="accent-rose-500">
+              <span>Sunsilk</span>
+            </label>
+            <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
+              <input type="checkbox" name="favoriteBrands" value="Vaseline" class="accent-rose-500">
+              <span>Vaseline</span>
             </label>
             <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
               <input type="checkbox" name="favoriteBrands" value="Vitalis" class="accent-rose-500">
@@ -780,6 +817,41 @@
     </div>
   </section>
 
+  <section id="pagePublicDashboard" class="hidden w-full max-w-6xl mx-auto px-4 py-6 sm:py-10">
+    <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+      <div>
+        <a href="#" class="text-sm font-bold text-rose-700">← Pendaftaran</a>
+        <h1 class="mt-2 text-3xl sm:text-4xl font-black text-slate-900">Dashboard Pendaftaran Undian</h1>
+      </div>
+      <button type="button" id="refreshPublicDashboard" onclick="loadPublicDashboard()" class="min-h-11 rounded-xl border border-rose-200 bg-white px-4 text-sm font-bold text-rose-700 disabled:opacity-50">Muat Ulang</button>
+    </div>
+    <div id="publicDashboardFilters" role="group" aria-label="Tanggal pendaftaran Desember 2026, WIB" class="mb-4 flex flex-wrap gap-2">
+      <button type="button" data-period="semua" aria-pressed="true" onclick="loadPublicDashboard(this.dataset.period)" class="min-h-11 rounded-xl border border-rose-200 bg-white px-3 py-2 text-sm font-bold text-rose-800 aria-pressed:bg-rose-700 aria-pressed:text-white disabled:opacity-60">Semua Pendaftar</button>
+      <button type="button" data-period="sebelum" aria-pressed="false" onclick="loadPublicDashboard(this.dataset.period)" class="min-h-11 rounded-xl border border-rose-200 bg-white px-3 py-2 text-sm font-bold text-rose-800 aria-pressed:bg-rose-700 aria-pressed:text-white disabled:opacity-60">Sebelum 10 Desember</button>
+      <button type="button" data-period="hari_10" aria-pressed="false" onclick="loadPublicDashboard(this.dataset.period)" class="min-h-11 rounded-xl border border-rose-200 bg-white px-3 py-2 text-sm font-bold text-rose-800 aria-pressed:bg-rose-700 aria-pressed:text-white disabled:opacity-60">Hari Pertama · 10 Desember</button>
+      <button type="button" data-period="hari_11" aria-pressed="false" onclick="loadPublicDashboard(this.dataset.period)" class="min-h-11 rounded-xl border border-rose-200 bg-white px-3 py-2 text-sm font-bold text-rose-800 aria-pressed:bg-rose-700 aria-pressed:text-white disabled:opacity-60">Hari Kedua · 11 Desember</button>
+      <button type="button" data-period="hari_12" aria-pressed="false" onclick="loadPublicDashboard(this.dataset.period)" class="min-h-11 rounded-xl border border-rose-200 bg-white px-3 py-2 text-sm font-bold text-rose-800 aria-pressed:bg-rose-700 aria-pressed:text-white disabled:opacity-60">Hari Keempat · 12 Desember</button>
+      <button type="button" data-period="hari_13" aria-pressed="false" onclick="loadPublicDashboard(this.dataset.period)" class="min-h-11 rounded-xl border border-rose-200 bg-white px-3 py-2 text-sm font-bold text-rose-800 aria-pressed:bg-rose-700 aria-pressed:text-white disabled:opacity-60">Hari Terakhir · 13 Desember</button>
+    </div>
+    <p id="publicDashboardStatus" class="text-sm text-slate-600" role="status"></p>
+    <div id="publicDashboardData" class="hidden space-y-6">
+      <dl class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="publicDashboardTotals"></dl>
+      <section class="rounded-2xl border border-rose-100 bg-white p-4 sm:p-6">
+        <h2 class="text-lg font-extrabold text-slate-900 mb-3">Pendaftaran per Generasi</h2>
+        <dl id="publicDashboardGenerations" class="divide-y divide-rose-100"></dl>
+      </section>
+      <section class="rounded-2xl border border-rose-100 bg-white p-4 sm:p-6">
+        <h2 class="text-lg font-extrabold text-slate-900 mb-3">Kabupaten/Kota dan Kecamatan</h2>
+        <div id="publicDashboardRegions" class="space-y-2"></div>
+      </section>
+      <section class="rounded-2xl border border-rose-100 bg-white p-4 sm:p-6">
+        <h2 class="text-lg font-extrabold text-slate-900">Brand Favorit</h2>
+        <p class="text-sm text-slate-600 mt-1 mb-3">Satu peserta bisa memilih lebih dari satu brand.</p>
+        <dl id="publicDashboardBrands" class="grid sm:grid-cols-2 gap-x-6 divide-y divide-rose-100"></dl>
+      </section>
+    </div>
+  </section>
+
   <section id="pageSetting" class="hidden slide-up max-w-lg mx-auto w-full px-4 py-6 flex-grow">
     <form id="drawDateForm" onsubmit="saveDrawDates(event)" class="p-6 space-y-4 bg-white border border-rose-100 rounded-3xl shadow-sm">
       <h2 class="font-extrabold text-slate-800">Setting Undian</h2>
@@ -842,24 +914,25 @@
     </div>
 
     <div class="flex-1 min-w-0">
-        <table id="databaseTable" class="w-full text-left text-xs">
-          <thead class="bg-rose-50/50 text-slate-600 font-extrabold sticky top-0 z-10 border-b border-rose-100 whitespace-nowrap">
-            <tr>
-              <th class="p-3 text-center">
+        <table id="databaseTable" role="table" aria-label="Database peserta undian" class="w-full text-left text-xs">
+          <thead role="rowgroup" class="bg-rose-50/50 text-slate-600 font-extrabold sticky top-0 z-10 border-b border-rose-100 whitespace-nowrap">
+            <tr role="row">
+              <th role="columnheader" class="p-3 text-center">
                 <input type="checkbox" id="checkSelectAll" aria-label="Pilih semua peserta di halaman ini" onchange="toggleSelectAll(this)" class="w-4 h-4 accent-rose-500 rounded">
+                <label for="checkSelectAll" class="hidden database-mobile-select">Pilih semua di halaman ini</label>
               </th>
-              <th class="p-3 text-center">No.</th>
-              <th class="p-3">Tanggal Daftar</th>
-              <th class="p-3">Nama Pelanggan</th>
-              <th class="p-3">WhatsApp</th>
-              <th class="p-3">Tgl Lahir</th>
-              <th class="p-3">Gender</th>
-              <th class="p-3">Provinsi</th>
-              <th class="p-3">Kabupaten/Kota</th>
-              <th class="p-3">Kecamatan</th>
-              <th class="p-3">Desa/Kelurahan</th>
-              <th class="p-3">Nomor Undian</th>
-              <th class="p-3 text-center">Aksi</th>
+              <th role="columnheader" class="p-3 text-center">No.</th>
+              <th role="columnheader" class="p-3">Tanggal Daftar</th>
+              <th role="columnheader" class="p-3">Nama Pelanggan</th>
+              <th role="columnheader" class="p-3">WhatsApp</th>
+              <th role="columnheader" class="p-3">Tgl Lahir</th>
+              <th role="columnheader" class="p-3">Gender</th>
+              <th role="columnheader" class="p-3">Provinsi</th>
+              <th role="columnheader" class="p-3">Kabupaten/Kota</th>
+              <th role="columnheader" class="p-3">Kecamatan</th>
+              <th role="columnheader" class="p-3">Desa/Kelurahan</th>
+              <th role="columnheader" class="p-3">Nomor Undian</th>
+              <th role="columnheader" class="p-3 text-center">Aksi</th>
             </tr>
           </thead>
           <tbody id="dashboardTableBody" class="divide-y divide-rose-50"></tbody>
@@ -1368,17 +1441,13 @@
     }
 
     function handleHashNavigation() {
-      let hash = window.location.hash;
-      if (hash === '#dashboard') {
-        hash = '#database';
-        window.history.replaceState(null, '', hash);
-      }
+      const hash = window.location.hash;
       hideAllPages();
 
-      const navLinks = ['Daftar', 'Setting', 'Database', 'Undian'];
-      navLinks.forEach(item => {
-        const el = document.getElementById(`navLink${item}`);
-        if (el && item !== 'Undian') el.classList.remove('text-rose-500', 'bg-rose-50');
+      const currentRoute = ['#database', '#dashboard', '#undian', '#setting'].includes(hash) ? hash : '#';
+      document.querySelectorAll('nav a[id^="navLink"]').forEach(link => {
+        if (link.getAttribute('href') === currentRoute) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
       });
 
       const requiresAdmin = hash === '#database' || hash === '#undian';
@@ -1387,15 +1456,15 @@
       document.getElementById('adminSignOut').classList.toggle('hidden', !isAdminSession(adminSession));
       if (needsLogin) return;
 
-      if (hash === '#setting') {
+      if (hash === '#dashboard') {
+        document.getElementById('pagePublicDashboard').classList.remove('hidden');
+        loadPublicDashboard();
+      } else if (hash === '#setting') {
         document.getElementById('pageSetting').classList.remove('hidden');
-        document.getElementById('navLinkSetting').classList.add('text-rose-500', 'bg-rose-50');
         renderDrawDates();
       } else if (hash === '#database') {
         const pDashboard = document.getElementById('pageDatabase');
         if (pDashboard) pDashboard.classList.remove('hidden');
-        const navDashboard = document.getElementById('navLinkDatabase');
-        if (navDashboard) navDashboard.classList.add('text-rose-500', 'bg-rose-50');
         loadDashboardData();
       } else if (hash === '#undian') {
         const pUndian = document.getElementById('pageUndian');
@@ -1404,16 +1473,115 @@
       } else {
         const pDaftar = document.getElementById('pageDaftar');
         if (pDaftar) pDaftar.classList.remove('hidden');
-        const navDaftar = document.getElementById('navLinkDaftar');
-        if (navDaftar) navDaftar.classList.add('text-rose-500', 'bg-rose-50');
       }
     }
 
     function hideAllPages() {
-      ['pageDaftar', 'pageSetting', 'pageDatabase', 'pageUndian'].forEach(id => {
+      ['pageDaftar', 'pageSetting', 'pageDatabase', 'pageUndian', 'pagePublicDashboard'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.add('hidden');
       });
+    }
+
+    const dashboardNumber = new Intl.NumberFormat('id-ID');
+    const dashboardGenerations = [
+      ['pre_boomer', 'Pre-Boomer (sebelum 1946)'],
+      ['baby_boomer', 'Baby Boomer (1946–1964)'],
+      ['gen_x', 'Generasi X / Gen X (1965–1980)'],
+      ['milenial', 'Generasi Y / Milenial (1981–1996)'],
+      ['gen_z', 'Generasi Z / Gen Z (1997–2012)'],
+      ['gen_alpha', 'Generasi Alpha / Post-Gen Z (2013–2024)']
+    ];
+
+    function dashboardCount(label, count, style) {
+      const row = document.createElement('div');
+      row.className = style;
+      const title = document.createElement('dt');
+      title.className = 'min-w-0 break-words text-sm text-slate-700';
+      title.textContent = label;
+      const value = document.createElement('dd');
+      value.className = 'shrink-0 font-extrabold tabular-nums text-rose-700';
+      value.textContent = dashboardNumber.format(count ?? 0);
+      row.append(title, value);
+      return row;
+    }
+
+    function renderPublicDashboard(data) {
+      const cards = 'rounded-2xl border border-rose-100 bg-white p-4 space-y-1';
+      const line = 'flex items-start justify-between gap-3 py-2.5';
+      const totals = [
+        ['Total Peserta', data.total],
+        ['Laki-laki', data.laki_laki],
+        ['Perempuan', data.perempuan]
+      ];
+      if (data.gender_lain) totals.push(['Gender belum tercatat / lainnya', data.gender_lain]);
+      document.getElementById('publicDashboardTotals').replaceChildren(
+        ...totals.map(([label, count]) => dashboardCount(label, count, cards))
+      );
+
+      const generations = [...dashboardGenerations];
+      if (data.generasi.setelah_2024) generations.push(['setelah_2024', 'Lahir setelah 2024']);
+      if (data.generasi.tanpa_tanggal_lahir) generations.push(['tanpa_tanggal_lahir', 'Tanggal lahir belum tercatat']);
+      document.getElementById('publicDashboardGenerations').replaceChildren(
+        ...generations.map(([key, label]) => dashboardCount(label, data.generasi[key], line))
+      );
+
+      const regions = document.getElementById('publicDashboardRegions');
+      regions.replaceChildren();
+      if (!data.wilayah.length) regions.textContent = 'Belum ada data wilayah.';
+      for (const region of data.wilayah) {
+        const details = document.createElement('details');
+        details.className = 'rounded-xl border border-rose-100 px-3';
+        const summary = document.createElement('summary');
+        summary.className = 'cursor-pointer py-3 font-bold break-words';
+        summary.textContent = `${region.kabupaten} · ${dashboardNumber.format(region.jumlah)} pelanggan`;
+        const province = document.createElement('p');
+        province.className = 'text-xs text-slate-500';
+        province.textContent = region.provinsi;
+        const districts = document.createElement('dl');
+        districts.className = 'divide-y divide-rose-100';
+        for (const district of region.kecamatan) {
+          districts.append(dashboardCount(district.nama, district.jumlah, line));
+        }
+        details.append(summary, province, districts);
+        regions.append(details);
+      }
+
+      const brands = document.querySelectorAll('#formPendaftaran input[name="favoriteBrands"]');
+      document.getElementById('publicDashboardBrands').replaceChildren(
+        ...Array.from(brands, input => dashboardCount(input.value, data.brand[input.value], line))
+      );
+    }
+
+    let publicDashboardPeriod = 'semua';
+
+    async function loadPublicDashboard(period = publicDashboardPeriod) {
+      const button = document.getElementById('refreshPublicDashboard');
+      if (button.disabled) return;
+      const status = document.getElementById('publicDashboardStatus');
+      const content = document.getElementById('publicDashboardData');
+      const filters = document.querySelectorAll('#publicDashboardFilters button');
+      publicDashboardPeriod = period;
+      button.disabled = true;
+      for (const filter of filters) {
+        filter.disabled = true;
+        filter.setAttribute('aria-pressed', String(filter.dataset.period === period));
+      }
+      content.classList.add('hidden');
+      status.textContent = 'Memuat rekap pendaftaran…';
+      try {
+        const { data, error } = await supabaseClient.rpc('rekap_peserta_event', { p_periode: period });
+        if (error) throw error;
+        renderPublicDashboard(data);
+        content.classList.remove('hidden');
+        status.textContent = '';
+      } catch (error) {
+        console.error('Gagal memuat rekap:', error);
+        status.textContent = 'Rekap belum bisa dimuat. Coba muat ulang.';
+      } finally {
+        button.disabled = false;
+        for (const filter of filters) filter.disabled = false;
+      }
     }
 
     function showLoading(show, message = "") {
@@ -1504,8 +1672,8 @@
         tgl.innerHTML += `<option value="${String(i).padStart(2, '0')}">${i}</option>`;
       }
       thn.innerHTML = '<option value="" disabled selected>Tahun</option>';
-      const currentYear = new Date().getFullYear();
-      for (let y = currentYear; y >= 1950; y--) {
+      const latestBirthYear = 2015;
+      for (let y = latestBirthYear; y >= 1950; y--) {
         thn.innerHTML += `<option value="${y}">${y}</option>`;
       }
       [tgl, bln, thn].forEach(el => {
@@ -1846,6 +2014,7 @@
     function changeDatabasePage(direction) {
       databasePage += direction;
       filterDashboardData();
+      if (window.matchMedia("(max-width: 900px)").matches) window.scrollTo(0, 0);
     }
 
     window.addEventListener('resize', () => {
@@ -1861,7 +2030,9 @@
       const head = document.querySelector('#databaseTable thead');
       const pager = document.getElementById('databasePager');
       const availableHeight = document.documentElement.clientHeight - head.getBoundingClientRect().bottom - pager.offsetHeight - 2;
-      const pageSize = Math.max(1, Math.floor(availableHeight / 46));
+      const pageSize = window.matchMedia("(max-width: 900px)").matches
+        ? 1
+        : Math.max(1, Math.floor(availableHeight / 46));
       const pageCount = Math.max(1, Math.ceil(dataList.length / pageSize));
       databasePage = Math.min(pageCount, Math.max(1, databasePage));
       const offset = (databasePage - 1) * pageSize;
@@ -1879,6 +2050,8 @@
         return;
       }
 
+      const labels = Array.from(head.rows[0].cells, cell => cell.textContent.trim());
+      labels[0] = 'Pilih peserta';
       pageRows.forEach((row, index) => {
         const isChecked = selectedParticipantIds.has(row.id);
         const waClean = (row.whatsapp || '').replace(/[^0-9]/g, '');
@@ -1886,6 +2059,7 @@
 
         const tr = document.createElement('tr');
         tr.className = "hover:bg-rose-50/20 transition-colors";
+        tr.setAttribute('role', 'row');
         tr.innerHTML = `
           <td class="p-3 text-center">
             <input type="checkbox" value="${row.id}" ${isChecked ? 'checked' : ''} onchange="toggleSelectRow(${row.id}, this)" class="w-4 h-4 accent-rose-500 rounded">
@@ -1917,9 +2091,14 @@
           </td>
         `;
         for (const cell of tr.cells) {
+          cell.dataset.label = labels[cell.cellIndex];
+          cell.setAttribute('role', 'cell');
           if (cell.classList.contains('whitespace-nowrap') && !cell.querySelector('button')) {
             cell.title = cell.textContent.trim();
           }
+          const value = document.createElement('span');
+          value.append(...cell.childNodes);
+          cell.append(value);
         }
         tbody.appendChild(tr);
       });
