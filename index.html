@@ -14,8 +14,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome 6.6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-  <!-- QRCode.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <!-- Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <!-- SheetJS (xlsx) untuk Export dan Import Excel -->
@@ -334,51 +332,6 @@
     </div>
   </div>
 
-  <!-- ================= POPUP NOMOR WHATSAPP SUDAH TERDAFTAR ================= -->
-  <div id="duplicateUserModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-[2.25rem] w-full max-w-sm overflow-hidden shadow-2xl transform transition-all border border-rose-100">
-      <div class="h-20 flex items-center justify-center text-white relative bg-gradient-to-r from-amber-500 to-rose-500 shadow-inner">
-        <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl">
-          <i class="fa-solid fa-id-card-clip"></i>
-        </div>
-      </div>
-      <div class="p-6 text-center space-y-4">
-        <div>
-          <h3 class="text-base font-extrabold text-slate-850">Nomor WhatsApp Sudah Terdaftar</h3>
-          <p class="text-[11px] text-slate-400 mt-1 font-semibold leading-relaxed">Nomor WhatsApp ini sudah tercatat sebelumnya di sistem undian.</p>
-        </div>
-
-        <div class="bg-rose-50/40 p-4 rounded-2xl border border-rose-100 text-left space-y-2 text-xs">
-          <div class="flex justify-between items-center border-b border-rose-100/50 pb-1.5">
-            <span class="text-slate-400 font-bold">Nama</span>
-            <span id="dupNama" class="font-extrabold text-slate-800 uppercase text-right">--</span>
-          </div>
-          <div class="flex justify-between items-center border-b border-rose-100/50 pb-1.5">
-            <span class="text-slate-400 font-bold">Nomor WA</span>
-            <span id="dupWhatsapp" class="font-extrabold text-slate-800">--</span>
-          </div>
-          <div class="flex justify-between items-center border-b border-rose-100/50 pb-1.5">
-            <span class="text-rose-500 font-bold">Nomor Undian</span>
-            <span id="dupKode" class="font-black text-rose-600 bg-white px-2 py-0.5 rounded-lg border border-rose-200">--</span>
-          </div>
-          <div class="flex justify-between items-center pt-0.5">
-            <span class="text-slate-400 font-bold">Tanggal Mendaftar</span>
-            <span id="dupTanggal" class="font-extrabold text-slate-700 text-right">--</span>
-          </div>
-        </div>
-
-        <div class="space-y-2 pt-1">
-          <button id="dupBtnViewTicket" onclick="openExistingTicketFromModal()" class="btn-active w-full h-11 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-2xl text-xs transition shadow-button flex items-center justify-center gap-1.5">
-            <i class="fa-solid fa-ticket"></i> Buka Kupon Undian Saya
-          </button>
-          <button onclick="closeDuplicateModal()" class="btn-active w-full h-11 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-2xl text-xs transition">
-            Mengerti & Tutup
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- ================= POPUP KONFIRMASI KUSTOM (GLOBAL) ================= -->
   <div id="customConfirmModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-[2.25rem] w-full max-w-sm overflow-hidden shadow-2xl transform transition-all border border-rose-100">
@@ -449,7 +402,7 @@
           <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">
             Tanggal Lahir <span class="text-rose-500">*</span>
           </label>
-          <div class="grid grid-cols-3 gap-2">
+          <div class="grid grid-cols-[minmax(0,0.7fr)_minmax(0,1.55fr)_minmax(0,1fr)] gap-2">
             <select id="selectTanggal" aria-label="Tanggal lahir" required class="h-12 px-3 rounded-2xl border border-rose-100 bg-rose-50/20 text-xs text-slate-700"></select>
             <select id="selectBulan" aria-label="Bulan lahir" required class="h-12 px-2 rounded-2xl border border-rose-100 bg-rose-50/20 text-xs text-slate-700">
               <option value="" disabled selected>Bulan</option>
@@ -718,7 +671,7 @@
           <i class="fa-solid fa-circle-check"></i>
         </div>
         <h3 class="text-xl font-black text-slate-800">Kupon Undian</h3>
-        <p class="text-xs text-slate-400 font-medium mt-0.5">Simpan tiket ini sebagai bukti pendaftaran undian.</p>
+        <p class="text-xs text-slate-400 font-medium mt-0.5">Pendaftaran berhasil! Simpan tiket ini sebagai bukti pendaftaran undian.</p>
       </div>
 
       <!-- Detail Kartu Kupon Utama -->
@@ -741,11 +694,31 @@
         </div>
       </div>
 
-      <!-- QR Code Container -->
-      <div class="py-2">
-        <div id="ticketQrCode" class="flex justify-center p-3 bg-white rounded-2xl border border-rose-100 shadow-sm max-w-[210px] mx-auto"></div>
-        <p class="text-[10px] text-slate-400 font-semibold mt-2">Pindai QR untuk membuka kembali tiket.</p>
-      </div>
+      <section aria-labelledby="ticketDrawInfo" class="space-y-3 rounded-2xl border border-rose-200 bg-rose-50/40 p-4 text-left text-xs leading-relaxed text-slate-700">
+        <h4 id="ticketDrawInfo" class="font-extrabold uppercase text-rose-600">
+          <i class="fa-solid fa-gift mr-1" aria-hidden="true"></i> Informasi Undian
+        </h4>
+        <p class="font-semibold">Undian akan dilaksanakan secara langsung di Hotel Dedy Jaya pada:</p>
+        <ul class="space-y-1 rounded-xl border border-rose-100 bg-white/75 p-3 font-semibold">
+          <li><i class="fa-solid fa-calendar-days mr-2 text-rose-500" aria-hidden="true"></i>Minggu, 13 Desember 2026</li>
+          <li><i class="fa-solid fa-clock mr-2 text-rose-500" aria-hidden="true"></i>Pukul 15.00 WIB – Selesai</li>
+          <li><i class="fa-solid fa-location-dot mr-2 text-rose-500" aria-hidden="true"></i>Hotel Dedy Jaya</li>
+        </ul>
+        <div class="space-y-1.5 border-t border-rose-100 pt-2">
+          <h5 class="font-extrabold uppercase text-slate-800">
+            <i class="fa-solid fa-trophy mr-1 text-amber-500" aria-hidden="true"></i> Ketentuan Pemenang
+          </h5>
+          <p>Pemenang undian dinyatakan sah apabila:</p>
+          <ul class="list-disc space-y-1 pl-4 marker:text-rose-500">
+            <li>Hadir langsung di Hotel Dedy Jaya saat pengundian.</li>
+            <li>Menunjukkan kupon undian atau bukti pendaftaran berhasil kepada panitia.</li>
+            <li>Nomor yang dicantumkan saat pendaftaran harus benar-benar terdaftar di WhatsApp dan dapat dihubungi.</li>
+          </ul>
+          <p>Pemenang yang tidak hadir atau tidak dapat menunjukkan bukti pendaftaran atau kupon undian dinyatakan tidak memenuhi syarat.</p>
+        </div>
+        <p class="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-center font-bold text-emerald-800">Undian ini GRATIS dan tidak dipungut biaya.</p>
+        <p class="text-center text-[10px] font-semibold text-slate-500">✨ Jangan sampai ketinggalan! Hadir dan menangkan hadiahnya.</p>
+      </section>
 
       <button onclick="shareTicketToWA()" class="btn-active w-full h-12 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-xs transition shadow-button flex items-center justify-center gap-2">
         <i class="fa-brands fa-whatsapp text-base"></i> Kirim Bukti ke WhatsApp Admin
@@ -853,9 +826,6 @@
               <th class="p-3">Kecamatan</th>
               <th class="p-3">Desa/Kelurahan</th>
               <th class="p-3">Nomor Undian</th>
-              <th class="p-3">Kupon Creator</th>
-              <th class="p-3">Status Creator</th>
-              <th class="p-3">Link Postingan IG</th>
               <th class="p-3 text-center">Aksi</th>
             </tr>
           </thead>
@@ -1135,7 +1105,6 @@
     let selectedParticipantIds = new Set();
     let isDashboardAuthenticated = false;
     let currentActiveTicketData = null;
-    let currentDuplicateRecord = null;
 
     let drawDurationSeconds = parseInt(localStorage.getItem('stk_draw_duration') || '10', 10);
     if (isNaN(drawDurationSeconds) || drawDurationSeconds < 1) drawDurationSeconds = 10;
@@ -1314,6 +1283,14 @@
     };
 
     window.addEventListener('DOMContentLoaded', () => {
+      if (/Android/i.test(navigator.userAgent)) {
+        for (const id of ['btn_ig_stk', 'btn_ig_bf', 'btn_ig_channel']) {
+          const link = document.getElementById(id);
+          const webUrl = new URL(link.href);
+          link.href = `intent://${webUrl.host}${webUrl.pathname}#Intent;scheme=https;package=com.instagram.android;S.browser_fallback_url=${encodeURIComponent(webUrl.href)};end`;
+          link.removeAttribute('target');
+        }
+      }
       initDOBDropdowns();
       loadProvinces();
       handleHashNavigation();
@@ -1341,10 +1318,7 @@
         showLoading(true, "Memuat kupon undian Anda...");
         try {
           const { data, error } = await supabaseClient
-            .from('peserta_event')
-            .select('*')
-            .eq('public_token', token)
-            .maybeSingle();
+            .rpc('lihat_tiket_event', { p_token: token });
           if (error) throw error;
           if (data) renderSuccessTicket(data);
         } catch (err) {
@@ -1580,34 +1554,7 @@
         return;
       }
 
-      showLoading(true, "Memeriksa riwayat nomor WhatsApp...");
-
-      try {
-        const { data: existingRecord, error: errWa } = await supabaseClient
-          .from('peserta_event')
-          .select('*')
-          .eq('whatsapp', whatsapp)
-          .maybeSingle();
-
-        if (errWa) throw errWa;
-
-        if (existingRecord) {
-          showLoading(false);
-          currentDuplicateRecord = existingRecord;
-
-          document.getElementById('dupNama').innerText = existingRecord.nama;
-          document.getElementById('dupWhatsapp').innerText = existingRecord.whatsapp;
-          document.getElementById('dupKode').innerText = existingRecord.kode_undian;
-          document.getElementById('dupTanggal').innerText = formatDate(existingRecord.created_at, true);
-
-          document.getElementById('duplicateUserModal').classList.remove('hidden');
-          return;
-        }
-      } catch (err) {
-        console.warn("Gagal mengecek duplikasi WA:", err);
-      }
-
-      showLoading(true, "Menyiapkan slot kupon undian...");
+      showLoading(true, "Mendaftarkan kupon undian...");
 
       const tglLahir = document.getElementById('inputTanggalLahir').value;
       const jenisKelamin = document.getElementById('inputJenisKelamin').value;
@@ -1616,12 +1563,7 @@
       const kec = document.getElementById('selectKecamatan').value;
       const kel = document.getElementById('selectKelurahan').value;
 
-      const nextCode = await generateNextTicketNumber();
-      const publicToken = 'TOK-' + Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
-
       const payload = {
-        public_token: publicToken,
-        kode_undian: nextCode,
         nama: nama,
         whatsapp: whatsapp,
         tanggal_lahir: tglLahir || null,
@@ -1630,24 +1572,26 @@
         kabupaten: kab,
         kecamatan: kec,
         desa: kel,
-        brand_favorit: favoriteBrands,
-        creator_status: 'nanti',
-        instagram_link: null,
-        creator_code: null,
-        creator_approval: 'Belum Klaim',
-        status_aktivasi: 'AKTIF'
+        brand_favorit: favoriteBrands
       };
 
       try {
-        const { data, error } = await supabaseClient.from('peserta_event').insert([payload]).select().single();
+        const { data, error } = await supabaseClient.rpc('daftar_peserta_event', { p_data: payload });
         if (error) throw error;
 
         showLoading(false);
+        if (!data?.public_token || !data.kode_undian) throw new Error("Respons tiket tidak lengkap.");
+        safeUpdateUrl(`?t=${encodeURIComponent(data.public_token)}`);
         renderSuccessTicket(data);
         triggerWhatsAppRedirectPopup();
       } catch (err) {
         showLoading(false);
-        showNotification("Gagal Pendaftaran", "Kendala Supabase: " + err.message, "error");
+        if (err.code === '23505') {
+          showNotification("Nomor WhatsApp Sudah Terdaftar", "Gunakan tautan tiket yang sudah disimpan, atau hubungi admin jika tautannya hilang.", "info");
+        } else {
+          console.error("Gagal mendaftarkan kupon:", err);
+          showNotification("Gagal Pendaftaran", "Pendaftaran belum berhasil. Periksa data yang diisi atau hubungi admin jika masalah berlanjut.", "error");
+        }
       }
     }
 
@@ -1705,23 +1649,6 @@
       } catch (e) {}
     }
 
-    function openExistingTicketFromModal() {
-      if (currentDuplicateRecord) {
-        const targetRecord = currentDuplicateRecord;
-        closeDuplicateModal();
-        renderSuccessTicket(targetRecord);
-        if (targetRecord.public_token) {
-          safeUpdateUrl(`?t=${targetRecord.public_token}`);
-        }
-      }
-    }
-
-    function closeDuplicateModal() {
-      const modal = document.getElementById('duplicateUserModal');
-      if (modal) modal.classList.add('hidden');
-      currentDuplicateRecord = null;
-    }
-
     function renderSuccessTicket(data) {
       if (!data) return;
       currentActiveTicketData = data;
@@ -1734,21 +1661,6 @@
       document.getElementById('ticketWhatsapp').innerText = data.whatsapp || '--';
       document.getElementById('ticketWilayah').innerText = [data.kabupaten, data.provinsi].filter(Boolean).join(', ') || '--';
       document.getElementById('ticketKode').innerText = data.kode_undian || '--';
-
-      const qrContainer = document.getElementById('ticketQrCode');
-      if (qrContainer) {
-        qrContainer.innerHTML = '';
-        if (data.kode_undian) {
-          new QRCode(qrContainer, {
-            text: `${CONFIG.BASE_URL}?t=${encodeURIComponent(data.public_token)}`,
-            width: 190,
-            height: 190,
-            colorDark: "#1e293b",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
-          });
-        }
-      }
 
     }
 
@@ -1813,7 +1725,7 @@
       if (totalCount) totalCount.innerText = dataList.length;
 
       if (dataList.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="16" class="p-8 text-center text-slate-400 font-medium">Tidak ada data peserta.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="13" class="p-8 text-center text-slate-400 font-medium">Tidak ada data peserta.</td></tr>`;
         return;
       }
 
@@ -1821,18 +1733,6 @@
         const isChecked = selectedParticipantIds.has(row.id);
         const waClean = (row.whatsapp || '').replace(/[^0-9]/g, '');
         const waLink = waClean.startsWith('0') ? '62' + waClean.slice(1) : waClean;
-
-        let creatorBadge = '<span class="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-slate-100 text-slate-500">Belum Klaim</span>';
-        if (row.creator_approval === 'Aktif') {
-          creatorBadge = '<span class="px-2 py-0.5 rounded-lg text-[10px] font-extrabold bg-emerald-100 text-emerald-700">Disetujui</span>';
-        } else if (row.creator_approval === 'Menunggu Verifikasi') {
-          creatorBadge = '<span class="px-2 py-0.5 rounded-lg text-[10px] font-extrabold bg-amber-100 text-amber-800">Menunggu</span>';
-        } else if (row.creator_approval === 'Ditolak') {
-          creatorBadge = '<span class="px-2 py-0.5 rounded-lg text-[10px] font-extrabold bg-rose-100 text-rose-700">Ditolak</span>';
-        }
-
-        const creatorCodeText = row.creator_code ? `<span class="font-mono font-black text-purple-600">${row.creator_code}</span>` : '<span class="text-slate-400">-</span>';
-        const creatorLinkHtml = row.instagram_link ? `<a href="${row.instagram_link}" target="_blank" class="text-pink-600 hover:underline font-bold flex items-center gap-1"><i class="fa-brands fa-instagram"></i> Buka</a>` : '<span class="text-slate-400">-</span>';
 
         const tr = document.createElement('tr');
         tr.className = "hover:bg-rose-50/20 transition-colors";
@@ -1855,9 +1755,6 @@
           <td class="p-3 whitespace-nowrap text-slate-600">${row.kecamatan || '-'}</td>
           <td class="p-3 whitespace-nowrap text-slate-600">${row.desa || '-'}</td>
           <td class="p-3 whitespace-nowrap font-mono font-black text-rose-600">${row.kode_undian || '-'}</td>
-          <td class="p-3 whitespace-nowrap">${creatorCodeText}</td>
-          <td class="p-3 whitespace-nowrap">${creatorBadge}</td>
-          <td class="p-3 whitespace-nowrap">${creatorLinkHtml}</td>
           <td class="p-3 text-center whitespace-nowrap">
             <div class="flex items-center justify-center gap-2">
               <button onclick="openEditModal(${row.id})" class="text-amber-500 hover:text-amber-600 p-1" title="Edit Peserta">
@@ -1882,7 +1779,6 @@
           (item.nama && item.nama.toLowerCase().includes(query)) ||
           (item.whatsapp && item.whatsapp.toLowerCase().includes(query)) ||
           (item.kode_undian && item.kode_undian.toLowerCase().includes(query)) ||
-          (item.creator_code && item.creator_code.toLowerCase().includes(query)) ||
           (item.kabupaten && item.kabupaten.toLowerCase().includes(query));
         return matchQuery;
       });
@@ -2059,9 +1955,6 @@
         "Kecamatan": p.kecamatan || '-',
         "Desa/Kelurahan": p.desa || '-',
         "Nomor Undian": p.kode_undian,
-        "Kupon Creator": p.creator_code || '-',
-        "Status Creator": p.creator_approval === 'Aktif' ? 'Disetujui' : p.creator_approval || 'Belum Klaim',
-        "Link Postingan IG": p.instagram_link || '-',
         "Brand Favorit": p.brand_favorit?.length ? p.brand_favorit.join(', ') : '-'
       }));
 
@@ -2069,8 +1962,7 @@
       worksheet['!cols'] = [
         { wch: 6 }, { wch: 18 }, { wch: 24 }, { wch: 16 },
         { wch: 14 }, { wch: 14 }, { wch: 18 }, { wch: 22 },
-        { wch: 18 }, { wch: 18 }, { wch: 16 }, { wch: 16 },
-        { wch: 16 }, { wch: 26 }, { wch: 40 }
+        { wch: 18 }, { wch: 18 }, { wch: 16 }, { wch: 40 }
       ];
 
       const workbook = XLSX.utils.book_new();
@@ -2090,9 +1982,6 @@
           "Kecamatan": "SUMBERSARI",
           "Desa/Kelurahan": "TEGAL GEDE",
           "Nomor Undian": "",
-          "Kupon Creator": "STK-CC101",
-          "Status Creator": "Disetujui",
-          "Link Postingan IG": "https://www.instagram.com/p/sample1",
         }
       ];
 
@@ -2100,7 +1989,7 @@
       worksheet['!cols'] = [
         { wch: 22 }, { wch: 18 }, { wch: 15 }, { wch: 15 },
         { wch: 18 }, { wch: 24 }, { wch: 18 }, { wch: 18 },
-        { wch: 16 }, { wch: 16 }, { wch: 16 }, { wch: 26 }
+        { wch: 16 }
       ];
 
       const workbook = XLSX.utils.book_new();
@@ -2144,9 +2033,6 @@
             if (!nama) continue;
 
             const nextTicket = item['Nomor Undian'] || await generateNextTicketNumber();
-            const creatorCode = item['Kupon Creator'] || null;
-            const creatorApproval = item['Status Creator'] === 'Disetujui' ? 'Aktif' : item['Status Creator'] || (creatorCode ? 'Menunggu Verifikasi' : 'Belum Klaim');
-
             inserts.push({
               public_token: 'UP-' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36),
               kode_undian: nextTicket,
@@ -2157,11 +2043,7 @@
               provinsi: item['Provinsi'] || '-',
               kabupaten: item['Kabupaten/Kota'] || '-',
               kecamatan: item['Kecamatan'] || '-',
-              desa: item['Desa/Kelurahan'] || '-',
-              status_aktivasi: 'AKTIF',
-              creator_code: creatorCode,
-              creator_approval: creatorApproval,
-              instagram_link: item['Link Postingan IG'] || null
+              desa: item['Desa/Kelurahan'] || '-'
             });
           }
 
@@ -2232,23 +2114,11 @@
               kode_undian: p.kode_undian,
               nama: p.nama,
               whatsapp: p.whatsapp,
-              created_at: p.created_at,
-              tipe: 'Kupon Utama'
+              created_at: p.created_at
             });
           }
         }
 
-        if (p.creator_code && p.creator_approval === 'Aktif') {
-          if (!winnerCodes.has(p.creator_code) && !allDiscardedCodes.has(p.creator_code)) {
-            pool.push({
-              kode_undian: p.creator_code,
-              nama: p.nama,
-              whatsapp: p.whatsapp,
-              created_at: p.created_at,
-              tipe: 'Kupon Content Creator'
-            });
-          }
-        }
       });
 
       return pool;
