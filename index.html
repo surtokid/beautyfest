@@ -738,7 +738,7 @@
           </div>
         </fieldset>
 
-        <!-- SYARAT PENDAFTARAN (6 MEDIA SOSIAL) -->
+        <!-- SYARAT PENDAFTARAN (7 MEDIA SOSIAL) -->
         <div class="pt-4 border-t border-rose-50 space-y-3">
           <div>
             <h4 class="text-xs font-extrabold text-slate-800 uppercase flex items-center gap-1.5">
@@ -763,7 +763,22 @@
                 class="btn-active bg-black hover:bg-slate-800 text-white text-[11px] font-bold py-1.5 px-3.5 rounded-xl">Follow</a>
             </div>
 
-            <!-- 2. Facebook Suryatokoku.id -->
+            <!-- 2. TikTok Suryafluencers -->
+            <div class="p-3 border border-rose-100 rounded-2xl flex items-center justify-between bg-white">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-black text-white flex items-center justify-center">
+                  <i class="fa-brands fa-tiktok"></i>
+                </div>
+                <div>
+                  <h5 class="font-extrabold text-slate-800 text-[11px]">Suryafluencers</h5>
+                  <p class="text-[9px] text-slate-400">@suryafluencers</p>
+                </div>
+              </div>
+              <a href="https://www.tiktok.com/@suryafluencers?_r=1&amp;_t=ZS-9BX9IaXCA6w" rel="noopener noreferrer" target="_blank" onclick="markSocialOpened('tiktok_sf')" id="btn_tiktok_sf"
+                class="btn-active bg-black hover:bg-slate-800 text-white text-[11px] font-bold py-1.5 px-3.5 rounded-xl">Follow</a>
+            </div>
+
+            <!-- 3. Facebook Suryatokoku.id -->
             <div class="p-3 border border-rose-100 rounded-2xl flex items-center justify-between bg-white">
               <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center">
@@ -778,7 +793,7 @@
                 class="btn-active bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold py-1.5 px-3.5 rounded-xl">Follow</a>
             </div>
 
-            <!-- 3. IG Suryatokoku -->
+            <!-- 4. IG Suryatokoku -->
             <div class="p-3 border border-rose-100 rounded-2xl flex items-center justify-between bg-white">
               <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 text-white flex items-center justify-center">
@@ -793,7 +808,7 @@
                 class="btn-active bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-bold py-1.5 px-3.5 rounded-xl">Follow</a>
             </div>
 
-            <!-- 4. Instagram Suryatokoku Beautyfest -->
+            <!-- 5. Instagram Suryatokoku Beautyfest -->
             <div class="p-3 border border-rose-100 rounded-2xl flex items-center justify-between bg-white">
               <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-pink-500 via-rose-500 to-purple-600 text-white flex items-center justify-center">
@@ -808,7 +823,7 @@
                 class="btn-active bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-bold py-1.5 px-3.5 rounded-xl">Follow</a>
             </div>
 
-            <!-- 5. Saluran IG -->
+            <!-- 6. Saluran IG -->
             <div class="p-3 border border-rose-100 rounded-2xl flex items-center justify-between bg-white">
               <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-purple-600 to-rose-500 text-white flex items-center justify-center">
@@ -823,7 +838,7 @@
                 class="btn-active bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-bold py-1.5 px-3.5 rounded-xl">Join</a>
             </div>
 
-            <!-- 6. Saluran WA -->
+            <!-- 7. Saluran WA -->
             <div class="p-3 border border-rose-100 rounded-2xl flex items-center justify-between bg-white">
               <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center">
@@ -1507,7 +1522,7 @@
     }
 
     let localVerificationStatus = {
-      ig_stk: false, fb_stk: false, ig_channel: false, ig_bf: false, tiktok_stk: false, wa_channel: false
+      ig_stk: false, fb_stk: false, ig_channel: false, ig_bf: false, tiktok_stk: false, tiktok_sf: false, wa_channel: false
     };
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -1773,7 +1788,7 @@
     }
 
     function updateSocialButtonsVisual() {
-      const keys = ['ig_stk', 'fb_stk', 'ig_channel', 'ig_bf', 'tiktok_stk', 'wa_channel'];
+      const keys = ['ig_stk', 'fb_stk', 'ig_channel', 'ig_bf', 'tiktok_stk', 'tiktok_sf', 'wa_channel'];
       keys.forEach(key => {
         const btn = document.getElementById(`btn_${key}`);
         if (btn && localVerificationStatus[key]) {
