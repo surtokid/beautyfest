@@ -624,6 +624,10 @@
           <p class="mb-2 text-xs text-slate-500">Pilih minimal 1 brand. Kamu boleh memilih semua.</p>
           <div class="grid grid-cols-2 gap-2">
             <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
+              <input type="checkbox" name="favoriteBrands" value="BNB" class="accent-rose-500">
+              <span>BNB</span>
+            </label>
+            <label class="flex items-center gap-2 min-h-10 px-3 py-2 border border-rose-100 rounded-xl text-xs font-semibold cursor-pointer">
               <input type="checkbox" name="favoriteBrands" value="CBD" class="accent-rose-500">
               <span>CBD</span>
             </label>
@@ -1018,16 +1022,9 @@
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
-        <button onclick="downloadExcelTemplate()" class="btn-active px-3.5 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
-          <i class="fa-solid fa-download"></i> Template Excel
-        </button>
         <button onclick="exportToExcel()" class="btn-active px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
           <i class="fa-solid fa-file-excel"></i> Export Excel
         </button>
-        <label class="btn-active px-3.5 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm cursor-pointer">
-          <i class="fa-solid fa-file-arrow-up"></i> Upload Excel
-          <input type="file" id="excelFileInput" accept=".xlsx, .xls" class="hidden" onchange="handleExcelUpload(event)">
-        </label>
         <button id="btnDeleteSelected" onclick="deleteSelectedParticipants()" disabled class="btn-active px-3.5 py-2 bg-rose-100 text-rose-400 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-not-allowed">
           <i class="fa-solid fa-trash-can"></i> Hapus Terpilih (<span id="selectedCount">0</span>)
         </button>
@@ -1865,29 +1862,6 @@
       }
     }
 
-    async function generateNextTicketNumber() {
-      const START_NUM = 10001;
-      try {
-        const { data, error } = await supabaseClient.from('peserta_event').select('kode_undian');
-        if (error) throw error;
-        
-        const existingNumbers = new Set(
-          (data || []).map(row => {
-            const match = row.kode_undian ? row.kode_undian.match(/^STK-(\d+)$/) : null;
-            return match ? parseInt(match[1], 10) : null;
-          }).filter(Boolean)
-        );
-
-        let target = START_NUM;
-        while (existingNumbers.has(target)) {
-          target++;
-        }
-        return `STK-${target}`;
-      } catch (err) {
-        return `STK-${Date.now().toString().slice(-5)}`;
-      }
-    }
-
     async function handleRegistration(event) {
       event.preventDefault();
 
@@ -2149,7 +2123,11 @@
           beforeId = data[data.length - 1].id;
         }
         if (!isAdminSession(adminSession)) return;
-        allParticipants = participants;
+        allParticipants = participants.sort((a, b) => {
+          const first = a.created_at ? Date.parse(a.created_at) : Infinity;
+          const second = b.created_at ? Date.parse(b.created_at) : Infinity;
+          return (first - second) || (a.id - b.id);
+        });
         filterDashboardData();
       } catch (err) {
         showNotification("Gagal Memuat Database", escapeHtml(err.message), "error");
@@ -2470,98 +2448,6 @@
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Peserta Undian");
       XLSX.writeFile(workbook, `Peserta_Beautyfest_Suryatokoku_${new Date().toISOString().slice(0, 10)}.xlsx`);
-    }
-
-    function downloadExcelTemplate() {
-      const sampleRows = [
-        {
-          "Nama Pelanggan": "Siti Nurhaliza",
-          "Nomor WhatsApp": "081234567890",
-          "Tanggal Lahir": "1998-05-14",
-          "Jenis Kelamin": "Perempuan",
-          "Provinsi": "JAWA TIMUR",
-          "Kabupaten/Kota": "KABUPATEN JEMBER",
-          "Kecamatan": "SUMBERSARI",
-          "Desa/Kelurahan": "TEGAL GEDE",
-          "Nomor Undian": "",
-        }
-      ];
-
-      const worksheet = XLSX.utils.json_to_sheet(sampleRows);
-      worksheet['!cols'] = [
-        { wch: 22 }, { wch: 18 }, { wch: 15 }, { wch: 15 },
-        { wch: 18 }, { wch: 24 }, { wch: 18 }, { wch: 18 },
-        { wch: 16 }
-      ];
-
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Template Peserta");
-      XLSX.writeFile(workbook, "Template_Upload_Peserta_Beautyfest.xlsx");
-      showNotification("Template Diunduh", "Template Excel berhasil didownload.", "success");
-    }
-
-    function parseExcelDate(val) {
-      if (!val) return null;
-      if (typeof val === 'number') {
-        const d = new Date(Math.round((val - 25569) * 86400 * 1000));
-        return d.toISOString().slice(0, 10);
-      }
-      const str = String(val).trim();
-      if (str.match(/^\d{4}-\d{2}-\d{2}$/)) return str;
-      const parts = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-      if (parts) return `${parts[3]}-${parts[2].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
-      return str;
-    }
-
-    function handleExcelUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        try {
-          showLoading(true, "Membaca file spreadsheet...");
-          const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: 'array' });
-          const sheet = workbook.Sheets[workbook.SheetNames[0]];
-          const jsonData = XLSX.utils.sheet_to_json(sheet);
-
-          if (jsonData.length === 0) throw new Error("File Excel kosong.");
-
-          const inserts = [];
-          for (const item of jsonData) {
-            const nama = item['Nama Pelanggan'] || item['Nama'];
-            const wa = String(item['Nomor WhatsApp'] || item['WhatsApp'] || '');
-            if (!nama) continue;
-
-            const nextTicket = item['Nomor Undian'] || await generateNextTicketNumber();
-            inserts.push({
-              public_token: 'UP-' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36),
-              kode_undian: nextTicket,
-              nama: String(nama).trim(),
-              whatsapp: wa.trim(),
-              tanggal_lahir: parseExcelDate(item['Tanggal Lahir']),
-              jenis_kelamin: item['Jenis Kelamin'] || 'Perempuan',
-              provinsi: item['Provinsi'] || '-',
-              kabupaten: item['Kabupaten/Kota'] || '-',
-              kecamatan: item['Kecamatan'] || '-',
-              desa: item['Desa/Kelurahan'] || '-'
-            });
-          }
-
-          const { error } = await supabaseClient.from('peserta_event').insert(inserts);
-          if (error) throw error;
-
-          await loadDashboardData();
-          showNotification("Upload Sukses", `${inserts.length} data berhasil diimpor!`, "success");
-        } catch (err) {
-          showNotification("Gagal Upload", escapeHtml(err.message), "error");
-        } finally {
-          event.target.value = '';
-          showLoading(false);
-        }
-      };
-      reader.readAsArrayBuffer(file);
     }
 
     async function loadLuckyDrawCandidates() {
