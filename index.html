@@ -872,6 +872,10 @@
           <span id="ticketWhatsapp" class="font-extrabold text-slate-800">--</span>
         </div>
         <div class="flex justify-between border-b border-rose-100 pb-2">
+          <span class="text-slate-400 font-bold">Tipe Pelanggan</span>
+          <span id="ticketCustomerType" class="font-extrabold text-slate-800 text-right">Belum Diisi</span>
+        </div>
+        <div class="flex justify-between border-b border-rose-100 pb-2">
           <span class="text-slate-400 font-bold">Domisili</span>
           <span id="ticketWilayah" class="font-extrabold text-slate-800 text-right">--</span>
         </div>
@@ -1999,6 +2003,7 @@
 
       document.getElementById('ticketNama').innerText = data.nama || '--';
       document.getElementById('ticketWhatsapp').innerText = data.whatsapp || '--';
+      document.getElementById('ticketCustomerType').textContent = data.tipe_pelanggan || 'Belum Diisi';
       document.getElementById('ticketWilayah').innerText = [data.kabupaten, data.provinsi].filter(Boolean).join(', ') || '--';
       document.getElementById('ticketKode').innerText = data.kode_undian || '--';
 
