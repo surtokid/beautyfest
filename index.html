@@ -555,6 +555,25 @@
           <p class="text-[10px] text-slate-400 font-medium">Harus berawalan '08' dan minimal 10 digit.</p>
         </div>
 
+        <fieldset class="space-y-2">
+          <legend class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Tipe Pelanggan <span class="text-rose-500">*</span></legend>
+          <p class="text-xs text-slate-500">Pilih yang paling sesuai dengan tujuan belanja kamu di Beauty Fest.</p>
+          <div class="grid gap-2">
+            <label class="flex items-start gap-2 rounded-xl border border-rose-100 p-3 cursor-pointer">
+              <input type="radio" name="tipePelanggan" value="Pelanggan Umum" required class="mt-0.5 accent-rose-500">
+              <span class="text-xs text-slate-600"><strong class="block text-slate-800">Pelanggan Umum</strong>Belanja untuk kebutuhan pribadi</span>
+            </label>
+            <label class="flex items-start gap-2 rounded-xl border border-rose-100 p-3 cursor-pointer">
+              <input type="radio" name="tipePelanggan" value="Jastiper" required class="mt-0.5 accent-rose-500">
+              <span class="text-xs text-slate-600"><strong class="block text-slate-800">Jastiper</strong>Belanja berdasarkan titipan atau pesanan pelanggan</span>
+            </label>
+            <label class="flex items-start gap-2 rounded-xl border border-rose-100 p-3 cursor-pointer">
+              <input type="radio" name="tipePelanggan" value="Reseller" required class="mt-0.5 accent-rose-500">
+              <span class="text-xs text-slate-600"><strong class="block text-slate-800">Reseller</strong>Belanja stok untuk dijual kembali</span>
+            </label>
+          </div>
+        </fieldset>
+
         <!-- Tanggal Lahir (Dropdowns) -->
         <div class="space-y-1.5">
           <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">
@@ -920,6 +939,10 @@
         <p id="publicDashboardStatus" role="status"></p>
         <div id="publicDashboardData" class="hidden">
           <dl id="publicDashboardTotals" aria-label="Ringkasan peserta"></dl>
+          <section id="publicCustomerTypesPanel" class="fest-summary-panel hidden" aria-labelledby="publicCustomerTypesTitle">
+            <h2 id="publicCustomerTypesTitle">Tipe Pelanggan</h2>
+            <dl id="publicDashboardCustomerTypes"></dl>
+          </section>
           <div class="fest-summary-panels">
             <section class="fest-summary-panel" aria-labelledby="fest-generation-title">
               <h2 id="fest-generation-title">Pendaftaran per Generasi</h2>
@@ -1020,6 +1043,7 @@
               <th role="columnheader" class="p-3">Desa/Kelurahan</th>
               <th role="columnheader" class="p-3">Nomor Undian</th>
               <th role="columnheader" class="p-3 database-brand-column">Brand Favorit</th>
+              <th role="columnheader" class="p-3">Tipe Pelanggan</th>
               <th role="columnheader" class="p-3 text-center">Aksi</th>
             </tr>
           </thead>
@@ -1615,6 +1639,13 @@
         ...totals.map(([label, count]) => dashboardCount(label, count, cards))
       );
 
+      const customerTypes = document.getElementById('publicDashboardCustomerTypes');
+      document.getElementById('publicCustomerTypesPanel').classList.toggle('hidden', !data.tipe_pelanggan);
+      if (data.tipe_pelanggan) {
+        customerTypes.replaceChildren(...['Pelanggan Umum', 'Jastiper', 'Reseller', 'Belum Diisi']
+          .map(label => dashboardCount(label, data.tipe_pelanggan[label], line)));
+      }
+
       const generations = [...dashboardGenerations];
       if (data.generasi.setelah_2024) generations.push(['setelah_2024', 'Lahir setelah 2024']);
       if (data.generasi.tanpa_tanggal_lahir) generations.push(['tanpa_tanggal_lahir', 'Tanggal lahir belum tercatat']);
@@ -1876,6 +1907,7 @@
         kabupaten: kab,
         kecamatan: kec,
         desa: kel,
+        tipe_pelanggan: event.currentTarget.querySelector('input[name="tipePelanggan"]:checked').value,
         brand_favorit: favoriteBrands
       };
 
@@ -2147,7 +2179,7 @@
       master.disabled = pageRows.length === 0;
 
       if (dataList.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="14" class="p-8 text-center text-slate-400 font-medium">Tidak ada data peserta.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="15" class="p-8 text-center text-slate-400 font-medium">Tidak ada data peserta.</td></tr>`;
         updateSelectedCount();
         return;
       }
@@ -2183,6 +2215,7 @@
           <td class="p-3 whitespace-nowrap text-slate-600">${escapeHtml(row.desa || '-')}</td>
           <td class="p-3 whitespace-nowrap font-mono font-black text-rose-600">${escapeHtml(row.kode_undian || '-')}</td>
           <td class="p-3 whitespace-nowrap text-slate-600">${escapeHtml(row.brand_favorit?.length ? row.brand_favorit.join(', ') : '-')}</td>
+          <td class="p-3 whitespace-nowrap text-slate-600">${escapeHtml(row.tipe_pelanggan ?? 'Belum Diisi')}</td>
           <td class="p-3 text-center whitespace-nowrap">
             <div class="flex items-center justify-center gap-2">
               <button onclick="openEditModal(${row.id})" class="text-amber-500 hover:text-amber-600 p-1" title="Edit Peserta">
@@ -2394,14 +2427,15 @@
         "Kecamatan": p.kecamatan || '-',
         "Desa/Kelurahan": p.desa || '-',
         "Nomor Undian": p.kode_undian,
-        "Brand Favorit": p.brand_favorit?.length ? p.brand_favorit.join(', ') : '-'
+        "Brand Favorit": p.brand_favorit?.length ? p.brand_favorit.join(', ') : '-',
+        "Tipe Pelanggan": p.tipe_pelanggan ?? 'Belum Diisi'
       }));
 
       const worksheet = XLSX.utils.json_to_sheet(exportRows);
       worksheet['!cols'] = [
         { wch: 6 }, { wch: 18 }, { wch: 24 }, { wch: 16 },
         { wch: 14 }, { wch: 14 }, { wch: 18 }, { wch: 22 },
-        { wch: 18 }, { wch: 18 }, { wch: 16 }, { wch: 40 }
+        { wch: 18 }, { wch: 18 }, { wch: 16 }, { wch: 40 }, { wch: 20 }
       ];
 
       const workbook = XLSX.utils.book_new();
